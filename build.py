@@ -123,9 +123,9 @@ def header(active):
     links = ''.join(f'<a href="{h}"{cur if h == active else ""}>{t}</a>' for h, t in NAV)
     return f'''<a class="skip" href="#main">Skip to content</a>
 <header class="top"><div class="wrap">
-<a class="logo" href="/" aria-label="Plooshi home"><img src="/assets/plooshi-avatar.jpg" alt="" width="50" height="50"><span>Ploo<b>shi</b></span></a>
+<a class="logo" href="/" aria-label="Plooshi home"><img src="/assets/plooshi-avatar-96.jpg" alt="" width="50" height="50"><span>Ploo<b>shi</b></span></a>
 <nav class="nav" id="nav" aria-label="Main">{links}<a class="cta" href="{YT_SUB}" target="_blank" rel="noopener">▶ Subscribe</a></nav>
-<a class="sticker-btn" href="/stickers/" aria-label="My sticker book">⭐ <span class="n">0</span></a>
+<a class="sticker-btn" href="/stickers/">⭐ <span class="n">0</span><span class="sr"> stickers: my sticker book</span></a>
 <button class="sound-btn" aria-pressed="true" aria-label="Turn sounds off">🔊</button>
 <button class="menu-btn" aria-expanded="false" aria-controls="nav" aria-label="Menu">☰</button>
 </div></header>'''
@@ -133,12 +133,12 @@ def header(active):
 
 FOOTER = f'''<footer><div class="wrap">
 <div class="cols">
-<div><a class="logo" href="/" style="color:#fff"><img src="/assets/plooshi-avatar.jpg" alt="" width="50" height="50" loading="lazy"><span>Ploo<b>shi</b></span></a>
+<div><a class="logo" href="/" style="color:#fff"><img src="/assets/plooshi-avatar-96.jpg" alt="" width="50" height="50" loading="lazy"><span>Ploo<b>shi</b></span></a>
 <p>Sing-along songs, nursery rhymes, lullabies and free printables that help little ones learn through song &amp; play.</p>
 <div class="socials"><a href="{YOUTUBE}" target="_blank" rel="noopener" aria-label="Plooshi on YouTube">{ICON_YT}</a><a href="{SPOTIFY}" target="_blank" rel="noopener" aria-label="Plooshi on Spotify">{ICON_SP}</a><a href="{INSTAGRAM}" target="_blank" rel="noopener" aria-label="Plooshi on Instagram">{ICON_IG}</a></div></div>
-<div><h3>Explore</h3><a href="/songs/">Songs &amp; Videos</a><a href="/printable/">Free Coloring Pages</a><a href="/color/">Color Online</a><a href="/play/">Games</a><a href="/learn/">Fun Facts &amp; Activities</a><a href="/stickers/">My Sticker Book</a></div>
-<div><h3>Listen</h3><a href="{SPOTIFY}" target="_blank" rel="noopener">Spotify</a><a href="{YOUTUBE}" target="_blank" rel="noopener">YouTube</a><a href="/songs/#lyrics">Song Lyrics</a><a href="/bedtime/">Bedtime &amp; Lullabies</a><a href="/feed.xml">New Songs (RSS)</a><a href="/licensing/">Licensing</a></div>
-<div><h3>Grown-ups</h3><a href="/about/">About Plooshi</a><a href="/faqs/">FAQs</a><a href="/contact/">Contact</a><a href="/privacy-policy-2/">Privacy</a><a href="/terms-of-service/">Terms</a></div>
+<div><h2>Explore</h2><a href="/songs/">Songs &amp; Videos</a><a href="/printable/">Free Coloring Pages</a><a href="/color/">Color Online</a><a href="/play/">Games</a><a href="/learn/">Fun Facts &amp; Activities</a><a href="/stickers/">My Sticker Book</a></div>
+<div><h2>Listen</h2><a href="{SPOTIFY}" target="_blank" rel="noopener">Spotify</a><a href="{YOUTUBE}" target="_blank" rel="noopener">YouTube</a><a href="/songs/#lyrics">Song Lyrics</a><a href="/bedtime/">Bedtime &amp; Lullabies</a><a href="/feed.xml">New Songs (RSS)</a><a href="/licensing/">Licensing</a></div>
+<div><h2>Grown-ups</h2><a href="/about/">About Plooshi</a><a href="/faqs/">FAQs</a><a href="/contact/">Contact</a><a href="/privacy-policy-2/">Privacy</a><a href="/terms-of-service/">Terms</a></div>
 </div>
 <div class="legal">© {datetime.date.today().year} Plooshi. All rights reserved. Made with 💙 for little listeners.</div>
 </div></footer>'''
@@ -175,9 +175,9 @@ def page(path, title, desc, body, active, jsonld, extra_js='', og_img=UP_ABS + '
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Plooshi – new songs" href="/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="/fonts/baloo2.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/nunito.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preconnect" href="https://i.ytimg.com">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{asset('/css/style.css')}">
 <script type="application/ld+json">{ld}</script>
 </head>
@@ -194,6 +194,38 @@ def page(path, title, desc, body, active, jsonld, extra_js='', og_img=UP_ABS + '
     out = os.path.join(SITE, path.strip('/'), 'index.html') if path != '/' else os.path.join(SITE, 'index.html')
     os.makedirs(os.path.dirname(out), exist_ok=True)
     open(out, 'w', encoding='utf8').write(doc)
+
+
+def yt_srcset(vid):
+    return f"https://i.ytimg.com/vi/{vid}/mqdefault.jpg 320w, https://i.ytimg.com/vi/{vid}/sddefault.jpg 640w, https://i.ytimg.com/vi/{vid}/maxresdefault.jpg 1280w"
+
+
+def thumb(p):
+    """Small 400px copy of a coloring page for cards (made by make_thumbs); falls back to the 768px image."""
+    t = f"/assets/thumbs/{p['s']}.jpg"
+    return t if exists(os.path.join(SITE, t.lstrip('/'))) else UP + p['img']
+
+
+SPOTIFY_PLAYER = ('<div class="spotify-facade" data-src="https://open.spotify.com/embed/artist/7im2jVMioz2l4PWG37YbFV?utm_source=generator&amp;theme=0">'
+                  '<button class="btn" type="button">🎧 Play Plooshi on Spotify</button><p>Tap to load the Spotify player</p></div>')
+
+
+def make_thumbs():
+    """400px thumbnails of the coloring pages and a small avatar (needs Pillow; skipped quietly without it)."""
+    try:
+        from PIL import Image
+    except ImportError:
+        return
+    long = (lambda p: '\\\\?\\' + os.path.abspath(p)) if os.name == 'nt' else (lambda p: p)
+    os.makedirs(os.path.join(SITE, 'assets', 'thumbs'), exist_ok=True)
+    for p in PRINTS:
+        out = os.path.join(SITE, 'assets', 'thumbs', p['s'] + '.jpg')
+        if exists(out): continue
+        im = Image.open(long(os.path.join(SITE, 'wp-content', 'uploads', p['img']))).convert('RGB')
+        im.thumbnail((400, 400)); im.save(out, quality=80, optimize=True, progressive=True)
+    av = os.path.join(SITE, 'assets', 'plooshi-avatar-96.jpg')
+    if not exists(av):
+        Image.open(os.path.join(ROOT, 'data', 'icon-source.jpg')).convert('RGB').resize((96, 96), Image.LANCZOS).save(av, quality=85, optimize=True)
 
 
 # ---------------------------------------------------------------- pieces
@@ -215,14 +247,14 @@ def vcard(v, lazy=True):
     """Song card: opens the song's own page (video, YouTube link, lyrics, sing-along)."""
     name = f"{v['t']} {v['e']}".strip()
     return f'''<article class="card" data-cats="{esc(v['c'])}" data-name="{esc((v['t'] + ' ' + v['d'] + ' ' + v['c']).lower())}">
-<a class="vthumb" href="{v['page']}" aria-label="{esc(v['t'])}: watch and sing along"><img src="https://i.ytimg.com/vi/{v['id']}/hqdefault.jpg" alt="{esc(v['t'])} – Plooshi kids song video" width="480" height="360" {'loading="lazy"' if lazy else ''} decoding="async"><span class="play"></span></a>
+<a class="vthumb" href="{v['page']}" aria-label="{esc(v['t'])}: watch and sing along"><img src="https://i.ytimg.com/vi/{v['id']}/mqdefault.jpg" srcset="https://i.ytimg.com/vi/{v['id']}/mqdefault.jpg 320w, https://i.ytimg.com/vi/{v['id']}/hqdefault.jpg 480w" sizes="(max-width:600px) 92vw, 280px" alt="{esc(v['t'])} – Plooshi kids song video" width="320" height="180" {'loading="lazy"' if lazy else ''} decoding="async"><span class="play"></span></a>
 <div class="body"><span class="badge">{esc(v['c'])}</span><h3><a href="{v['page']}">{esc(name)}</a></h3><p>{esc(v['d'])}</p></div></article>'''
 
 
 def pcard(p, lazy=True):
     return f'''<article class="pcard" data-slug="{p['s']}" data-cats="{','.join(p['c'])}" data-name="{esc((p['t'] + ' ' + ' '.join(p['c'])).lower())}">
 <button class="fav" aria-pressed="false" aria-label="Save {esc(p['t'])} to my faves">💖</button>
-<a class="img" href="/printable/{p['s']}/"><img src="{UP}{p['img']}" alt="Free printable {esc(p['t'])} coloring page for kids" width="768" height="593" {'loading="lazy"' if lazy else ''} decoding="async"></a>
+<a class="img" href="/printable/{p['s']}/"><img src="{thumb(p)}" srcset="{thumb(p)} 400w, {UP}{p['img']} 768w" sizes="(max-width:600px) 44vw, 240px" alt="Free printable {esc(p['t'])} coloring page for kids" width="400" height="309" {'loading="lazy"' if lazy else ''} decoding="async"></a>
 <h3>{esc(p['t'])}</h3>
 <div class="row"><a class="btn sm" data-dl href="{UP}{p['pdf']}" target="_blank" rel="noopener" aria-label="Print {esc(p['t'])} coloring page (PDF)">🖨️ Print</a><a class="btn sm white" href="/color/?p={p['s']}" aria-label="Color the {esc(p['t'])} online">🎨 Color</a></div>
 </article>'''
@@ -292,10 +324,10 @@ def build_home():
 <div class="wrap">
 <div class="sec-head reveal"><span class="tag">New on YouTube</span><h2 id="songs-title">Sing along with Plooshi 🎤</h2><p>Counting songs, ABCs, shapes, silly dances and cozy bedtime lullabies — new videos every week.</p></div>
 <div class="feature reveal">
-<div><button class="vthumb" data-id="{feat['id']}" aria-label="Play {esc(feat['t'])}" style="border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)"><img src="https://i.ytimg.com/vi/{feat['id']}/maxresdefault.jpg" alt="{esc(feat['t'])} – Plooshi song for kids" width="1280" height="720" fetchpriority="high"><span class="play"></span></button>
+<div><button class="vthumb" data-id="{feat['id']}" aria-label="Play {esc(feat['t'])}" style="border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)"><img src="https://i.ytimg.com/vi/{feat['id']}/maxresdefault.jpg" srcset="{yt_srcset(feat['id'])}" sizes="(max-width:860px) 92vw, 640px" alt="{esc(feat['t'])} – Plooshi song for kids" width="1280" height="720" fetchpriority="high"><span class="play"></span></button>
 <p style="margin:16px 4px 0;font-weight:800">🆕 {esc(feat['t'])} {feat['e']} · <a href="{feat['page']}">Lyrics &amp; sing-along →</a></p></div>
 <div class="listen"><h3>🎧 Listen on Spotify</h3>
-<iframe title="Plooshi on Spotify" src="https://open.spotify.com/embed/artist/7im2jVMioz2l4PWG37YbFV?utm_source=generator&amp;theme=0" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+{SPOTIFY_PLAYER}
 <div class="platforms"><a class="btn sm" href="{YT_SUB}" target="_blank" rel="noopener">▶ YouTube</a><a class="btn sm blue" href="{SPOTIFY}" target="_blank" rel="noopener">Spotify</a></div></div>
 </div>
 <div class="grid reveal">{''.join(vcard(v) for v in VIDEOS[1:7])}</div>
@@ -358,11 +390,11 @@ def build_songs():
 <div class="chips" data-filter-group="#vgrid" data-search="#vsearch" data-counter="#vcount" data-empty="#vempty">{chips(VCATS)}</div>
 <div class="searchbar"><label class="sr" for="vsearch">Search songs</label><input id="vsearch" type="search" placeholder="🔍 Find a song… (frogs, ABC, bath)"></div>
 <p class="count-line" id="vcount" aria-live="polite"></p>
-<div class="grid" id="vgrid">{''.join(vcard(v, i > 5) for i, v in enumerate(VIDEOS))}</div>
+<h2 class="sr">All songs</h2><div class="grid" id="vgrid">{''.join(vcard(v, i > 5) for i, v in enumerate(VIDEOS))}</div>
 <p class="empty" id="vempty" hidden>No songs found — try another word! 🙈</p>
 </div></section>
 <section class="bg-sun"><div class="wrap"><div class="sec-head"><h2>Bedtime? Try our lullabies on Spotify 🌙</h2><p>Instrumental lullaby versions of Twinkle Twinkle, Frère Jacques, Hush Little Baby and more.</p></div>
-<div class="listen" style="max-width:760px;margin:0 auto"><iframe title="Plooshi on Spotify" src="https://open.spotify.com/embed/artist/7im2jVMioz2l4PWG37YbFV?utm_source=generator&amp;theme=0" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div></div></section>'''
+<div class="listen" style="max-width:760px;margin:0 auto">{SPOTIFY_PLAYER}</div></div></section>'''
     items = [{'@type': 'ListItem', 'position': i + 1, 'item': {
         '@type': 'VideoObject', 'name': f"{v['t']} | {v['d']}", 'description': f"{v['t']} – {v['d']} by Plooshi.",
         'thumbnailUrl': f"https://i.ytimg.com/vi/{v['id']}/hqdefault.jpg", 'embedUrl': f"https://www.youtube.com/embed/{v['id']}",
@@ -387,7 +419,7 @@ def build_printables():
 <div class="searchbar"><label class="sr" for="psearch">Search coloring pages</label><input id="psearch" type="search" placeholder="🔍 What do you want to color? (unicorn, truck…)"></div>
 <div class="chips" data-filter-group="#pgrid" data-search="#psearch" data-counter="#pcount" data-empty="#pempty">{chips(PCATS, '<button class="chip" aria-pressed="false" data-cat="Faves">💖 My Faves</button><button class="chip" data-surprise style="background:var(--sun);border-color:var(--sun-d)">🎲 Surprise me!</button>')}</div>
 <p class="count-line" id="pcount" aria-live="polite"></p>
-<div class="pgrid" id="pgrid">{''.join(pcard(p, i > 7) for i, p in enumerate(PRINTS))}</div>
+<h2 class="sr">All coloring pages</h2><div class="pgrid" id="pgrid">{''.join(pcard(p, i > 7) for i, p in enumerate(PRINTS))}</div>
 <p class="empty" id="pempty" hidden>Nothing here yet! Try another word or tap 💖 on a page to save it. 🙈</p>
 </div></section>
 <section class="bg-pink"><div class="wrap"><div class="sec-head"><h2>Color while you sing! 🎶</h2><p>Put on a Plooshi playlist while your little artist colors — it makes quiet time extra fun.</p><p><a class="btn" href="/songs/">▶ Open the songs</a> <a class="btn blue" href="/color/">🎨 Color online</a></p></div></div></section>'''
@@ -584,7 +616,7 @@ def build_song_pages():
         emoji = (v or {}).get('e', '🎵') or '🎵'
         yt = f"https://www.youtube.com/watch?v={v['id']}" if v else YOUTUBE
         player = (f'<button class="vthumb song-player" data-id="{v["id"]}" aria-label="Play {esc(name)}">'
-                  f'<img src="https://i.ytimg.com/vi/{v["id"]}/maxresdefault.jpg" alt="{esc(name)} – Plooshi video" width="1280" height="720" fetchpriority="high"><span class="play"></span></button>') if v else ''
+                  f'<img src="https://i.ytimg.com/vi/{v["id"]}/maxresdefault.jpg" srcset="{yt_srcset(v["id"])}" sizes="(max-width:860px) 88vw, 700px" alt="{esc(name)} – Plooshi video" width="1280" height="720" fetchpriority="high"><span class="play"></span></button>') if v else ''
         meta_line = ''
         if v:
             bits = [v['c']] + ([f"{v['secs'] // 60}:{v['secs'] % 60:02d}"] if v.get('secs') else []) + ([datetime.date.fromisoformat(v['date'][:10]).strftime('%B %Y')] if v.get('date') else [])
@@ -667,7 +699,7 @@ def learn_thumb(a, i):
     words = a['p'].strip('/').replace('-', ' ')
     hit = next((p for p in PRINTS if re.search(r'\b' + re.escape(p['t'].lower()) + r's?\b', words)), None)
     if hit:  # no featured image on WordPress, so borrow the matching coloring page
-        return f'<img src="{UP}{hit["img"]}" alt="" width="768" height="593" loading="lazy" style="object-fit:contain;background:#fff">'
+        return f'<img src="{thumb(hit)}" alt="" width="400" height="309" loading="lazy" style="object-fit:contain;background:#fff">'
     emoji = next(e for c, e, _ in LEARN_CATS if c == a['c'])
     return f'<span class="tile t{i % 4}" aria-hidden="true">{emoji}</span>'
 
@@ -682,7 +714,7 @@ def build_learn():
 <div class="chips" data-filter-group="#agrid" data-search="#asearch" data-counter="#acount" data-empty="#aempty">{chips([(c, e) for c, e, _ in LEARN_CATS])}</div>
 <div class="searchbar"><label class="sr" for="asearch">Search articles</label><input id="asearch" type="search" placeholder="🔍 Search facts… (shark, moon, volcano)"></div>
 <p class="count-line" id="acount" aria-live="polite"></p>
-<div class="grid" id="agrid">{cards}</div><p class="empty" id="aempty" hidden>Nothing found — try another word! 🙈</p></div></section>'''
+<h2 class="sr">All articles</h2><div class="grid" id="agrid">{cards}</div><p class="empty" id="aempty" hidden>Nothing found — try another word! 🙈</p></div></section>'''
     ld = {'@context': 'https://schema.org', '@graph': [ORG, {'@type': 'CollectionPage', 'url': DOMAIN + '/learn/', 'name': 'Fun Facts & Activities for Kids',
           'mainEntity': {'@type': 'ItemList', 'itemListElement': [{'@type': 'ListItem', 'position': i + 1, 'url': DOMAIN + a['p'], 'name': a['t']} for i, a in enumerate(ARTICLES)]}},
           crumbs(('Home', '/'), ('Learn', '/learn/'))]}
@@ -784,7 +816,7 @@ def json_script(id_, obj):
 def today_section():
     data = {'base': BASE,
             'songs': [dict(t=v['t'], e=v['e'], id=v['id'], p=v['page']) for v in VIDEOS],
-            'prints': [dict(s=p['s'], t=p['t'], img=UP + p['img']) for p in PRINTS],
+            'prints': [dict(s=p['s'], t=p['t'], img=thumb(p)) for p in PRINTS],
             'facts': FACTS}
     return f'''<section class="bg-pink" aria-labelledby="today-title"><div class="wrap">
 <div class="sec-head reveal"><span class="tag">New every day</span><h2 id="today-title">Today's surprise 🎁</h2><p id="gift-hint">Tap the present to open it!</p></div>
@@ -875,11 +907,11 @@ def build_play():
 # ---------------------------------------------------------------- COLOR ONLINE
 def build_color():
     pages = [dict(s=p['s'], t=p['t'], img=UP + big_img(p), pdf=UP + p['pdf']) for p in PRINTS]
-    picks = ''.join(f'<a href="/color/?p={p["s"]}"><img src="{UP}{p["img"]}" alt="" width="768" height="593" loading="lazy">{esc(p["t"])}</a>' for p in PRINTS)
+    picks = ''.join(f'<a href="/color/?p={p["s"]}"><img src="{thumb(p)}" alt="" width="400" height="309" loading="lazy">{esc(p["t"])}</a>' for p in PRINTS)
     body = f'''<section class="phero">{CLOUDS}<div class="wrap" style="position:relative;z-index:2"><p class="crumbs"><a href="/">Home</a> › <a href="/printable/">Printables</a> › Color online</p>
 <h1 id="color-title">Color Online 🎨</h1><p>Pick a picture, choose a color, and tap to fill it in. Save it or print it when you're done!</p></div></section>
 <section style="padding-top:20px"><div class="wrap">
-<div id="picker"><div class="pick-grid">{picks}</div></div>
+<div id="picker"><h2 class="sr">Pick a picture</h2><div class="pick-grid">{picks}</div></div>
 <div id="app" hidden><div class="color-app">
 <div class="canvas-wrap"><canvas id="art" width="1024" height="791" aria-label="Coloring picture. Tap an area to fill it with color."></canvas><div class="loading">Getting your crayons… 🖍️</div></div>
 <div class="tools" id="tools"><div class="current"><i id="current-dot"></i><span id="current-name">Tap to fill</span></div>
@@ -924,7 +956,7 @@ def build_bedtime():
 <p><button class="btn blue" id="nightlight-btn" type="button">✨ Night light</button></p></div></section>
 <section style="padding-top:20px"><div class="wrap"><div class="sec-head"><h2>Lullabies 💤</h2><p>Start a lullaby, set the timer, and the music stops on its own.</p></div><div class="grid">{cards}</div>
 <div class="sec-head" style="margin-top:50px"><h2>Instrumental lullabies on Spotify 🎧</h2><p>Gentle music-box versions of Twinkle Twinkle, Brahms' Lullaby, Hush Little Baby and more.</p></div>
-<div class="listen" style="max-width:760px;margin:0 auto"><iframe title="Plooshi lullabies on Spotify" src="https://open.spotify.com/embed/artist/7im2jVMioz2l4PWG37YbFV?utm_source=generator&amp;theme=0" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div></div></section>
+<div class="listen" style="max-width:760px;margin:0 auto">{SPOTIFY_PLAYER}</div></div></section>
 <div class="nightlight" id="nightlight" role="dialog" aria-label="Night light"><p>Tap anywhere to close the night light</p></div>
 <div class="goodnight" id="goodnight" role="dialog" aria-label="Goodnight"><div>Goodnight! 🌙<br><small style="font-size:1.1rem;opacity:.7">The music has stopped. Sweet dreams 💤 (tap to close)</small></div></div></div>'''
     ld = {'@context': 'https://schema.org', '@graph': [ORG, {'@type': 'CollectionPage', 'url': DOMAIN + '/bedtime/', 'name': 'Bedtime Lullabies for Kids',
@@ -1135,6 +1167,7 @@ def apply_base():
 
 
 if __name__ == '__main__':
+    make_thumbs()
     build_home(); build_songs(); build_printables(); build_play()
     build_printable_pages(); build_song_pages(); songs_lyrics_index()
     build_articles(); build_learn(); build_info_pages(); build_404()

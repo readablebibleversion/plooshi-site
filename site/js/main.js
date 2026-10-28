@@ -106,6 +106,7 @@
   /* ---------- Speech (optional, for pre-readers) ---------- */
   function say(text) {
     if (!soundOn || !('speechSynthesis' in window)) return;
+    if (navigator.userActivation && !navigator.userActivation.hasBeenActive) return;  // browsers only allow speech after a tap
     try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 1; u.pitch = 1.5; speechSynthesis.speak(u); } catch (e) {}
   }
 
@@ -223,6 +224,15 @@
     const params = new URLSearchParams(location.search);
     if (search && params.get('q')) search.value = params.get('q');
     apply();
+  });
+
+  /* ---------- Spotify player loads only when tapped (keeps pages fast and cookie-free) ---------- */
+  document.addEventListener('click', e => {
+    const f = e.target.closest('.spotify-facade button'); if (!f) return;
+    const box = f.parentElement, ifr = document.createElement('iframe');
+    ifr.title = 'Plooshi on Spotify'; ifr.src = box.dataset.src + '&autoplay=1';
+    ifr.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+    box.replaceWith(ifr); sfx.pop();
   });
 
   /* ---------- Download celebration ---------- */
