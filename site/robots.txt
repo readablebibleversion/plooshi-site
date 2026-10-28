@@ -1,4 +1,7 @@
+# Plooshi — kids songs, coloring pages and games
 User-agent: *
 Allow: /
 
 Sitemap: https://plooshi.com/sitemap.xml
+
+# Also available: https://plooshi.com/feed.xml (new songs), https://plooshi.com/llms.txt (site guide for AI assistants)

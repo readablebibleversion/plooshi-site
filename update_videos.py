@@ -37,5 +37,30 @@ for vid, title, published in re.findall(r'<yt:videoId>([^<]+)</yt:videoId>.*?<ti
     new.append(dict(id=vid, t=name, e=emoji, d=desc, c=category(name, desc), date=published))
 
 data['v'] = new + data['v']          # newest first; the newest one becomes the home-page feature
+
+
+def watch_details(vid):
+    """Description, length and upload date from the public watch page (used on each song's own page)."""
+    req = urllib.request.Request(f'https://www.youtube.com/watch?v={vid}', headers={'User-Agent': 'Mozilla/5.0', 'Accept-Language': 'en-US,en'})
+    h = urllib.request.urlopen(req, timeout=30).read().decode('utf8', 'replace')
+    m = re.search(r'var ytInitialPlayerResponse = (\{.*?\});(?:var|</script>)', h, re.S)
+    if not m: return {}
+    vd = json.loads(m.group(1)).get('videoDetails', {})
+    mf = json.loads(m.group(1)).get('microformat', {}).get('playerMicroformatRenderer', {})
+    return {'desc': vd.get('shortDescription', ''), 'secs': int(vd.get('lengthSeconds') or 0),
+            'date': mf.get('publishDate') or mf.get('uploadDate')}
+
+
+filled = 0
+for v in data['v']:
+    if 'desc' in v: continue
+    try:
+        det = watch_details(v['id'])
+    except Exception as e:
+        print('  ! could not read', v['id'], e); continue
+    v['desc'], v['secs'] = det.get('desc', ''), det.get('secs', 0)
+    if not v.get('date') and det.get('date'): v['date'] = det['date']
+    filled += 1
+
 json.dump(data, open(DATA, 'w', encoding='utf8'), ensure_ascii=False)
-print(f'Added {len(new)} new video(s).' + ''.join(f'\n  + {v["t"]} ({v["c"]})' for v in new))
+print(f'Added {len(new)} new video(s), filled details for {filled}.' + ''.join(f'\n  + {v["t"]} ({v["c"]})' for v in new))

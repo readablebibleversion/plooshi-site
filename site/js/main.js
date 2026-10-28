@@ -41,7 +41,57 @@
     oops() { tone(220, 0.25, 'triangle', 0.15); tone(185, 0.3, 'triangle', 0.15, 0.12); },
     jingle() { ['C4', 'E4', 'G4', 'C5', 'G4', 'C5'].forEach((n, i) => tone(NOTES[n], 0.4, 'sine', 0.22, i * 0.11)); }
   };
-  window.Plooshi = { tone, NOTES, sfx, store, confetti, say };
+  /* ---------- Season (Halloween / Christmas); ?season=halloween|christmas|none to preview ---------- */
+  const season = (() => {
+    const q = new URLSearchParams(location.search).get('season');
+    if (q) return q === 'none' ? '' : q;
+    const d = new Date(), m = d.getMonth() + 1, day = d.getDate();
+    if ((m === 10 && day >= 10) || (m === 11 && day === 1)) return 'halloween';
+    if (m === 12 && day <= 26) return 'christmas';
+    return '';
+  })();
+  if (season) document.documentElement.dataset.season = season;
+
+  /* ---------- Stickers (kept only on this device, no account needed) ---------- */
+  const STICKERS = [
+    ['hello', '👋', 'Hello Friend', 'Visit Plooshi'], ['tap', '💙', 'Tickle Champ', 'Tap Plooshi 5 times'],
+    ['watch', '🎬', 'Movie Star', 'Watch a Plooshi video'], ['sing', '🎤', 'Superstar Singer', 'Finish a sing-along'],
+    ['print', '🖨️', 'Print Pro', 'Print a coloring page'], ['color', '🎨', 'Little Artist', 'Color 10 spots online'],
+    ['art', '🖼️', 'Gallery Star', 'Save a picture you colored'], ['fave', '💖', 'Collector', 'Save a fave coloring page'],
+    ['memory', '🧠', 'Memory Master', 'Finish Memory Match'], ['count', '🔢', 'Counting Champ', 'Count the bubbles to 10'],
+    ['xylo', '🎹', 'Music Maker', 'Play a whole xylophone song'], ['freeze', '🧊', 'Freeze Champ', 'Freeze 5 times in Freeze Dance'],
+    ['quiz', '🦁', 'Animal Expert', 'Get 5 right in the Animal Quiz'], ['dress', '🎩', 'Fashion Friend', 'Dress up Plooshi'],
+    ['read', '📚', 'Bookworm', 'Listen to a Read-to-me page'], ['explorer', '🔭', 'Explorer', 'Visit 3 fun fact pages'],
+    ['bedtime', '🌙', 'Sleepy Head', 'Start the bedtime timer'], ['today', '🎁', 'Surprise Seeker', "Open today's surprise"],
+    ['spooky', season === 'christmas' ? '🎅' : '🎃', 'Holiday Friend', 'Tap Plooshi on a holiday'], ['pal', '🏆', 'Plooshi Pal', 'Collect 15 stickers']
+  ];
+  function earned() { return store.get('stickers', {}); }
+  function syncStickerBtn() {
+    const n = Object.keys(earned()).length;
+    $$('.sticker-btn .n').forEach(el => el.textContent = n);
+  }
+  let toastTimer;
+  function toast(emoji, title, sub) {
+    let t = $('.toast');
+    if (!t) { t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+    t.innerHTML = `<span class="big" aria-hidden="true">${emoji}</span><span><b>${title}</b><small>${sub}</small></span>`;
+    requestAnimationFrame(() => t.classList.add('show'));
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3600);
+  }
+  function earn(id) {
+    const got = earned(); if (got[id]) return false;
+    const s = STICKERS.find(x => x[0] === id); if (!s) return false;
+    got[id] = new Date().toISOString().slice(0, 10); store.set('stickers', got);
+    toast(s[1], 'New sticker: ' + s[2] + '!', 'Find it in your sticker book ⭐');
+    sfx.yay(); confetti(30); syncStickerBtn();
+    $$('.sticker-btn').forEach(b => { b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); });
+    document.dispatchEvent(new CustomEvent('plooshi:sticker', { detail: id }));
+    if (Object.keys(got).length >= 15 && id !== 'pal') setTimeout(() => earn('pal'), 3800);
+    return true;
+  }
+  syncStickerBtn();
+
+  window.Plooshi = { tone, NOTES, sfx, store, confetti, say, earn, STICKERS, season };
 
   function syncSoundBtn() {
     $$('.sound-btn').forEach(b => { b.setAttribute('aria-pressed', soundOn); b.textContent = soundOn ? '🔊' : '🔇'; b.setAttribute('aria-label', soundOn ? 'Turn sounds off' : 'Turn sounds on'); });
@@ -74,10 +124,17 @@
 
   /* ---------- Mascot ---------- */
   const phrases = ['Hi friend! 👋', "Let's sing! 🎵", 'Tee-hee! That tickles!', 'Boing boing! 🦘', 'You are awesome! ⭐', 'Wanna color with me? 🖍️', 'Wiggle your toes! 🦶', "I'm Plooshi! 💙", 'Clap your hands! 👏', 'High five! ✋'];
+  if (season === 'halloween') phrases.unshift('Boo! 👻', 'Happy Halloween! 🎃', 'Trick or treat! 🍬');
+  if (season === 'christmas') phrases.unshift('Ho ho ho! 🎅', 'Merry Christmas! 🎄', 'Is it snowing? ❄️');
   $$('.mascot').forEach(m => {
     const stage = m.closest('.mascot-stage'), bubble = stage && $('.bubble', stage), hint = stage && $('.tap-hint', stage);
     let i = 0, timer;
     function poke(e) {
+      if (m.classList.contains('sleepy')) {  // bedtime: no boing, just a soft hush
+        tone(NOTES.E4, 1.2, 'sine', 0.08); tone(NOTES.C4, 1.4, 'sine', 0.06, 0.3);
+        if (bubble) { bubble.textContent = ['Shhh… 😴', 'Zzz… sweet dreams 💤', 'Night night 🌙'][i++ % 3]; bubble.classList.add('show'); clearTimeout(timer); timer = setTimeout(() => bubble.classList.remove('show'), 2200); }
+        return;
+      }
       m.classList.remove('jump'); void m.getBoundingClientRect(); m.classList.add('jump', 'happy');
       sfx.boing();
       const melody = [['C5', 'E5'], ['G4', 'C5'], ['E4', 'G4'], ['D5', 'E5']][i % 4];
@@ -92,6 +149,8 @@
       }
       i++;
       if (i % 10 === 0) confetti(60);
+      if (i === 5) earn('tap');
+      if (i === 2 && season) earn('spooky');
     }
     m.addEventListener('click', poke);
     m.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); poke(); } });
@@ -116,6 +175,7 @@
     f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
     f.allowFullscreen = true;
     b.appendChild(f); b.removeAttribute('role');
+    earn('watch');
   });
 
   /* ---------- Filter chips + search (videos & printables) ---------- */
@@ -154,7 +214,7 @@
       const slug = b.closest('[data-slug]').dataset.slug;
       b.setAttribute('aria-pressed', favs.has(slug));
       b.addEventListener('click', () => {
-        if (favs.has(slug)) favs.delete(slug); else { favs.add(slug); sfx.yay(); }
+        if (favs.has(slug)) favs.delete(slug); else { favs.add(slug); if (!earn('fave')) sfx.yay(); }
         b.setAttribute('aria-pressed', favs.has(slug)); store.set('favs', [...favs]);
         if (cat === 'Faves') apply();
       });
@@ -166,7 +226,7 @@
   });
 
   /* ---------- Download celebration ---------- */
-  document.addEventListener('click', e => { if (e.target.closest('a[data-dl]')) { sfx.jingle(); confetti(40); } });
+  document.addEventListener('click', e => { if (e.target.closest('a[data-dl]')) { sfx.jingle(); confetti(40); setTimeout(() => earn('print'), 900); } });
 
   /* ---------- Reveal on scroll ---------- */
   if ('IntersectionObserver' in window) {
@@ -194,8 +254,173 @@
     $$('[data-song]', wrap).forEach(btn => btn.addEventListener('click', () => { seq = songs[btn.dataset.song].split(' '); pos = 0; mark(); if (status) status.textContent = `Tap the bar with the dark ring! (${btn.textContent.trim()})`; }));
     x.addEventListener('note', e => {
       if (!seq) return;
-      if (e.detail === seq[pos]) { pos++; if (pos >= seq.length) { seq = null; if (status) status.textContent = 'You played the whole song! 🎉'; setTimeout(() => { sfx.yay(); confetti(); }, 500); } }
+      if (e.detail === seq[pos]) { pos++; if (pos >= seq.length) { seq = null; if (status) status.textContent = 'You played the whole song! 🎉'; setTimeout(() => { if (!earn('xylo')) { sfx.yay(); confetti(); } }, 500); } }
       mark();
     });
   });
+
+  /* ---------- Plooshi's outfit (chosen on the Play page, worn on every page) ---------- */
+  function outfit() {
+    const o = Object.assign({ hat: '', eyes: '', neck: '' }, store.get('outfit', {}));
+    if (!store.get('outfit', null) && season) o.hat = season === 'christmas' ? 'santa' : 'witch';
+    return o;
+  }
+  function applyOutfit(o = outfit()) {
+    $$('svg.mascot [data-acc]').forEach(g => {
+      const [slot, val] = g.dataset.acc.split('-');
+      g.style.display = o[slot] === val ? 'inline' : 'none';   // inline style beats the SVG's display="none"
+    });
+  }
+  applyOutfit();
+  Object.assign(window.Plooshi, { outfit, applyOutfit });
+
+  /* ---------- Seasonal decorations in page headers ---------- */
+  if (season && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const icons = season === 'halloween' ? ['🦇', '🦇', '🎃', '👻'] : ['❄️', '❄️', '⛄', '⭐'];
+    $$('.hero, .phero').forEach(h => {
+      const d = document.createElement('div'); d.className = 'season-deco'; d.setAttribute('aria-hidden', 'true');
+      for (let k = 0; k < (season === 'halloween' ? 5 : 14); k++) {
+        const s = document.createElement('span'); s.textContent = icons[k % icons.length];
+        if (season === 'halloween') { s.style.top = 8 + Math.random() * 60 + '%'; s.style.animationDuration = 14 + Math.random() * 10 + 's'; }
+        else { s.style.left = Math.random() * 100 + '%'; s.style.animationDuration = 9 + Math.random() * 9 + 's'; s.style.fontSize = 1 + Math.random() * 1.2 + 'rem'; }
+        s.style.animationDelay = -Math.random() * 20 + 's';
+        d.appendChild(s);
+      }
+      h.prepend(d);
+    });
+  }
+
+  /* ---------- Stickers just for visiting ---------- */
+  earn('hello');
+  if (/-facts-|facts-for-kids|antarctica/.test(location.pathname)) {
+    const seen = new Set(store.get('factsSeen', [])); seen.add(location.pathname); store.set('factsSeen', [...seen]);
+    if (seen.size >= 3) setTimeout(() => earn('explorer'), 1500);
+  }
+
+  /* ---------- Sticker book page ---------- */
+  const book = $('#sticker-book');
+  if (book) {
+    const render = () => {
+      const got = earned(), n = STICKERS.filter(s => got[s[0]]).length;
+      book.innerHTML = STICKERS.map(([id, e, name, hint]) => `<div class="sticker ${got[id] ? 'got' : 'locked'}"><span class="e" aria-hidden="true">${e}</span><b>${got[id] ? name : '???'}</b><small>${hint}</small></div>`).join('');
+      $('#sticker-count').textContent = `${n} of ${STICKERS.length} stickers`;
+      $('#sticker-bar').style.width = (n / STICKERS.length * 100) + '%';
+    };
+    render(); document.addEventListener('plooshi:sticker', render);
+    const reset = $('#sticker-reset');
+    if (reset) reset.addEventListener('click', () => { if (confirm('Start a brand new sticker book? This removes all your stickers on this device.')) { store.set('stickers', {}); syncStickerBtn(); render(); } });
+  }
+
+  /* ---------- Read to me (fact pages, printable pages) ---------- */
+  const article = $('article.prose[data-read]');
+  if (article && 'speechSynthesis' in window) {
+    const blocks = $$('h2, h3, p, li', article).filter(b => !b.closest('.platforms, .print-hero, .song-actions, .lyrics') && b.textContent.trim().length > 2);
+    if (blocks.length > 2) {
+      const btn = document.createElement('button'); btn.className = 'btn sun read-btn'; btn.type = 'button';
+      btn.textContent = '🔊 Read to me'; article.prepend(btn);
+      let idx = 0, on = false, heard = 0;
+      const voice = () => speechSynthesis.getVoices().find(v => /en(-|_)(US|GB)/i.test(v.lang) && /female|samantha|jenny|aria|zira|google us/i.test(v.name)) || speechSynthesis.getVoices().find(v => /^en/i.test(v.lang));
+      const stop = () => { on = false; speechSynthesis.cancel(); blocks.forEach(b => b.classList.remove('reading')); btn.textContent = '🔊 Read to me'; };
+      const next = () => {
+        blocks.forEach(b => b.classList.remove('reading'));
+        if (!on || idx >= blocks.length) { if (idx >= blocks.length) { idx = 0; earn('read'); } return stop(); }
+        const b = blocks[idx++]; b.classList.add('reading'); b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const u = new SpeechSynthesisUtterance(b.textContent.replace(/\s+/g, ' ').trim());
+        u.rate = 0.95; u.pitch = 1.15; const v = voice(); if (v) u.voice = v;
+        u.onend = () => { if (++heard === 6) earn('read'); next(); };
+        u.onerror = () => stop();
+        speechSynthesis.speak(u);
+      };
+      btn.addEventListener('click', () => { if (on) return stop(); on = true; btn.textContent = '⏸️ Stop reading'; speechSynthesis.cancel(); next(); });
+      window.addEventListener('pagehide', stop);
+    }
+  }
+
+  /* ---------- Sing-along mode (song pages) ---------- */
+  const singBtn = $('#sing-btn'), lyr = $('.lyrics');
+  if (singBtn && lyr) {
+    const lines = lyr.innerText.split('\n').map(s => s.trim()).filter(Boolean);
+    const k = document.createElement('div'); k.className = 'karaoke'; k.setAttribute('role', 'dialog'); k.setAttribute('aria-label', 'Sing-along');
+    k.innerHTML = `<img class="mascot" src="${$('.logo img').getAttribute('src')}" alt="" width="110" height="110" style="border-radius:50%">
+      <button class="btn sm white close" type="button">✕ Close</button>
+      <div class="k-lines" aria-live="polite"></div><div class="k-bar"><i></i></div>
+      <div class="k-controls"><button class="btn sm white" data-k="prev" type="button">◀ Back</button><button class="btn sun" data-k="auto" type="button">▶ Play</button><button class="btn sm white" data-k="next" type="button">Next ▶</button><button class="btn sm blue" data-k="speed" type="button">🐢 Slow</button></div>
+      <p style="opacity:.7;margin-top:18px">Tap anywhere for the next line</p>`;
+    document.body.appendChild(k);
+    let at = 0, auto = null, slow = true;
+    const show = () => {
+      const L = (j) => lines[j] ? `<p class="k-line ${j === at ? 'now' : j < at ? 'prev' : 'next'}">${lines[j].replace(/</g, '&lt;')}</p>` : '';
+      $('.k-lines', k).innerHTML = L(at - 1) + L(at) + L(at + 1);
+      $('.k-bar i', k).style.width = ((at + 1) / lines.length * 100) + '%';
+      $('.mascot', k).animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-16px)' }, { transform: 'translateY(0)' }], { duration: 400 });
+      tone(NOTES[['C5', 'E5', 'G4', 'D5'][at % 4]], 0.3, 'sine', 0.08);
+    };
+    const step = (d) => {
+      if (at + d >= lines.length) { stopAuto(); earn('sing'); confetti(); $('.k-lines', k).innerHTML = '<p class="k-line now">You sang the whole song! 🎉</p>'; return; }
+      at = Math.max(0, at + d); show();
+    };
+    const stopAuto = () => { clearTimeout(auto); auto = null; $('[data-k="auto"]', k).textContent = '▶ Play'; };
+    const tick = () => { auto = setTimeout(() => { step(1); if (auto) tick(); }, (slow ? 2200 : 1300) + lines[at].split(' ').length * (slow ? 260 : 160)); };
+    k.addEventListener('click', e => {
+      const b = e.target.closest('[data-k], .close');
+      if (!b) return step(1);
+      if (b.classList.contains('close')) { stopAuto(); k.classList.remove('open'); return; }
+      const a = b.dataset.k;
+      if (a === 'next') step(1);
+      if (a === 'prev') step(-1);
+      if (a === 'speed') { slow = !slow; b.textContent = slow ? '🐢 Slow' : '🐇 Fast'; }
+      if (a === 'auto') { if (auto) stopAuto(); else { b.textContent = '⏸ Pause'; tick(); } }
+    });
+    document.addEventListener('keydown', e => { if (!k.classList.contains('open')) return; if (e.key === 'Escape') { stopAuto(); k.classList.remove('open'); } if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); step(1); } if (e.key === 'ArrowLeft') step(-1); });
+    singBtn.addEventListener('click', () => { at = 0; show(); k.classList.add('open'); sfx.jingle(); });
+  }
+
+  /* ---------- Today's surprise (home page) ---------- */
+  const todayEl = $('#today-data');
+  if (todayEl) {
+    const D = JSON.parse(todayEl.textContent), now = new Date();
+    const key = now.toISOString().slice(0, 10), day = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 864e5) + now.getFullYear() * 366;
+    const s = D.songs[day % D.songs.length], p = D.prints[(day * 7) % D.prints.length], f = D.facts[(day * 3) % D.facts.length];
+    const box = $('#surprise'), gift = $('#gift');
+    box.innerHTML = `
+      <article class="card"><a class="vthumb" href="${D.base}${s.p}"><img src="https://i.ytimg.com/vi/${s.id}/hqdefault.jpg" alt="" loading="lazy"><span class="play"></span></a>
+        <div class="body"><span class="badge">🎵 Song of the day</span><h3><a href="${D.base}${s.p}">${s.t} ${s.e}</a></h3></div></article>
+      <article class="card"><a class="vthumb" href="${D.base}/color/?p=${p.s}"><img src="${D.base}${p.img}" alt="" loading="lazy" style="object-fit:contain;background:#fff"></a>
+        <div class="body"><span class="badge">🎨 Color of the day</span><h3><a href="${D.base}/color/?p=${p.s}">Color the ${p.t}!</a></h3></div></article>
+      <article class="card fact-card"><a class="vthumb" href="${D.base}${f.p}">${f.e}</a>
+        <div class="body"><span class="badge">🔭 Fact of the day</span><p style="margin:6px 0 8px;font-weight:700;color:var(--ink)">${f.f}</p><a href="${D.base}${f.p}">More ${f.t} →</a></div></article>`;
+    const open = (celebrate) => { gift.hidden = true; $('#gift-hint').hidden = true; box.hidden = false; if (celebrate) { confetti(70); sfx.jingle(); earn('today'); } store.set('todayOpened', key); };
+    if (store.get('todayOpened', '') === key) open(false);
+    gift.addEventListener('click', () => open(true));
+  }
+
+  /* ---------- Bedtime page ---------- */
+  const bed = $('#bedtime');
+  if (bed) {
+    document.body.classList.add('night');
+    const sky = document.createElement('div'); sky.className = 'stars'; sky.setAttribute('aria-hidden', 'true');
+    for (let k = 0; k < 90; k++) { const s = document.createElement('i'); s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%'; s.style.animationDelay = -Math.random() * 3 + 's'; s.style.opacity = .3 + Math.random() * .7; sky.appendChild(s); }
+    document.body.prepend(sky);
+    const left = $('#timer-left'), gn = $('#goodnight'), nl = $('#nightlight');
+    let end = 0, iv;
+    const sleep = () => {
+      clearInterval(iv); end = 0; left.textContent = '';
+      $$('.vthumb iframe').forEach(f => f.remove());                                                       // stops videos (tap again to replay)
+      $$('iframe').forEach(f => { f.dataset.src = f.dataset.src || f.src; f.src = 'about:blank'; });   // stops Spotify
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+      gn.classList.add('open');
+    };
+    $$('[data-min]', bed).forEach(b => b.addEventListener('click', () => {
+      end = Date.now() + (+b.dataset.min) * 60000; earn('bedtime'); tone(NOTES.G4, 1, 'sine', .08);
+      clearInterval(iv); iv = setInterval(() => {
+        const ms = end - Date.now(); if (ms <= 0) return sleep();
+        const m = Math.floor(ms / 60000), s = Math.floor(ms / 1000) % 60;
+        left.textContent = `🌙 Music stops in ${m}:${String(s).padStart(2, '0')}`;
+      }, 500);
+    }));
+    $('#timer-cancel').addEventListener('click', () => { clearInterval(iv); end = 0; left.textContent = ''; });
+    $('#nightlight-btn').addEventListener('click', () => { nl.classList.add('open'); if (nl.requestFullscreen) nl.requestFullscreen().catch(() => {}); });
+    nl.addEventListener('click', () => { nl.classList.remove('open'); if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); });
+    gn.addEventListener('click', () => { gn.classList.remove('open'); $$('iframe').forEach(f => { if (f.dataset.src && f.src === 'about:blank' && !f.closest('.vthumb')) f.src = f.dataset.src; }); });
+  }
 })();

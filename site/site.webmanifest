@@ -1,15 +1,22 @@
 {
- "name": "Plooshi",
+ "name": "Plooshi \u2013 Songs, Coloring & Games",
  "short_name": "Plooshi",
  "start_url": "/",
  "display": "standalone",
  "background_color": "#fffaf0",
  "theme_color": "#5ec8f2",
+ "description": "Kids songs, coloring pages and games from Plooshi.",
  "icons": [
   {
-   "src": "/wp-content/uploads/2024/01/cropped-19fcebfc-ca65-498c-a9bf-1fc67c1f8320-192x192.webp",
+   "src": "/icon-192.png",
    "sizes": "192x192",
-   "type": "image/webp"
+   "type": "image/png"
+  },
+  {
+   "src": "/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
   }
  ]
 }

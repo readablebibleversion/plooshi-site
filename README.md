@@ -59,6 +59,16 @@ Notes for GitHub Pages:
 
 ---
 
+## What's on the site
+
+- **Songs:** every YouTube video has its own page at `/song/<name>/`, with the video, a Watch-on-YouTube button, the description, lyrics or the "Sing together" verse, and a full-screen **Sing-along mode**. Songs that only have lyrics keep their old WordPress URLs.
+- **Coloring:** 96 printables (print the PDF), plus **Color online** at `/color/?p=<name>`, with tap-to-fill, rainbow, eraser, undo, save and print.
+- **Play** (`/play/`): Dress Up Plooshi (the outfit shows on every page), Freeze Dance, Animal Quiz, Memory Match, Bubble Count, Xylophone and Color Plooshi.
+- **Sticker book** (`/stickers/`): 20 stickers earned by playing, watching, coloring and reading. They're saved only in the visitor's own browser.
+- **Today's surprise** on the home page (a new song, picture and fact each day), **Read to me** on fact and printable pages, and a **Bedtime** page (`/bedtime/`) with a sleep timer and night light.
+- **Seasons:** Halloween (from Oct 10 to Nov 1) and Christmas (Dec 1 to 26) switch on automatically: a witch or Santa hat, bats or snow, and holiday coloring pages. Preview any time with `?season=halloween`, `?season=christmas` or `?season=none`.
+- **Site files:** `sitemap.xml` (with video details), `robots.txt`, `feed.xml` (RSS of new songs), `llms.txt` and `llms-full.txt` (a guide for AI assistants), `humans.txt`, `.well-known/security.txt`, favicon and app icons.
+
 ## Updating the site
 
 Requires Python 3 (`python --version`).

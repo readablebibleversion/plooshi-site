@@ -1,0 +1,166 @@
+# Plooshi
+
+> Plooshi is a children's music brand (artist name on Spotify and YouTube) making sing-along songs, nursery rhymes and lullabies for toddlers and preschoolers (about ages 1–6), plus 96 free printable coloring pages, kid-safe learning games and fun-fact articles. Everything on plooshi.com is free, with no sign-up.
+
+Plooshi is based in Austin, Texas (founded 2023). Contact: info@plooshi.com. Links: [YouTube](https://www.youtube.com/@plooshimusic), [Spotify](https://open.spotify.com/artist/7im2jVMioz2l4PWG37YbFV), [Instagram](https://www.instagram.com/plooshimusic/).
+
+## Songs
+- [All songs and videos](https://plooshi.com/songs/): every song with its video, lyrics and a sing-along mode
+- [Bedtime lullabies](https://plooshi.com/bedtime/): lullabies with a sleep timer and night light
+- [Alice the Camel](https://plooshi.com/song/alice-the-camel/): Fun Counting Song for Kids
+- [B-I-N-G-O](https://plooshi.com/song/b-i-n-g-o/): Lyrics
+- [Baa Baa Black Sheep](https://plooshi.com/song/baa-baa-black-sheep/): Classic Sing Along Nursery Rhyme for Kids
+- [Baby Dino Shark](https://plooshi.com/song/baby-dino-shark/): Lyrics
+- [Baby Shark](https://plooshi.com/song/baby-shark/): Lyrics
+- [Boot Scoot Boogie Bug](https://plooshi.com/song/boot-scoot-boogie-bug/): Fun Country Dance Song for Kids
+- [Brushing Teeth Song](https://plooshi.com/song/brushing-teeth-song/): Learn How to Brush Your Teeth for Kids
+- [Do Your Ears Hang Low](https://plooshi.com/song/do-your-ears-hang-low/): Classic Sing Along Song for Kids
+- [Eeny Meeny Miny Moe](https://plooshi.com/song/eeny-meeny-miny-moe/): Lyrics
+- [Five Little Ducks](https://plooshi.com/song/five-little-ducks/): Counting Song for Kids
+- [Five Little Monkeys Jumping On The Bed](https://plooshi.com/song/five-little-monkeys-jumping-on-the-bed/): Lyrics
+- [Five Little Speckled Frogs](https://plooshi.com/song/five-little-speckled-frogs/): Counting Song for Kids
+- [For He's a Jolly Good Fellow](https://plooshi.com/song/for-hes-a-jolly-good-fellow/): Classic Sing Along Song for Kids
+- [Frere Jacques (Are You Sleeping)](https://plooshi.com/song/frere-jacques-are-you-sleeping/): Soothing Lullaby for Kids
+- [Goodnight Sweetheart](https://plooshi.com/song/goodnight-sweetheart/): Soothing Lullaby for Kids
+- [Head, Shoulders, Knees and Toes](https://plooshi.com/song/head-shoulders-knees-and-toes/): Lyrics
+- [Hey Diddle Diddle](https://plooshi.com/song/hey-diddle-diddle/): Lyrics
+- [Hickory Dickory Dock](https://plooshi.com/song/hickory-dickory-dock/): Lyrics
+- [Hokey Pokey](https://plooshi.com/song/hokey-pokey/): Lyrics
+- [Hot Cross Buns](https://plooshi.com/song/hot-cross-buns/): Classic Sing Along Nursery Rhyme for Kids
+- [Humpty Dumpty](https://plooshi.com/song/humpty-dumpty/): Classic Sing Along Nursery Rhyme for Kids
+- [If You're Happy and You Know It](https://plooshi.com/song/if-youre-happy-and-you-know-it/): Lyrics
+- [Itsy Bitsy Spider](https://plooshi.com/song/itsy-bitsy-spider/): Lyrics
+- [Jack and Jill](https://plooshi.com/song/jack-and-jill/): Lyrics
+- [John Jacob Jingleheimer Schmidt](https://plooshi.com/song/john-jacob-jingleheimer-schmidt/): Lyrics
+- [Johnny Johnny Yes Papa](https://plooshi.com/song/johnny-johnny-yes-papa/): Classic Sing Along Nursery Rhyme for Kids
+- [Kumbaya](https://plooshi.com/song/kumbaya/): Lyrics
+- [Learn ABCs with Affirmations](https://plooshi.com/song/learn-abcs-with-affirmations/): Positive Alphabet Song for Kids
+- [Learn ABCs with American Pride](https://plooshi.com/song/learn-abcs-with-american-pride/): Alphabet Song for Kids
+- [London Bridge is Falling Down](https://plooshi.com/song/london-bridge-is-falling-down/): Lyrics
+- [Mary Had a Little Lamb](https://plooshi.com/song/mary-had-a-little-lamb/): Lyrics
+- [Monster Truck](https://plooshi.com/song/monster-truck-song/): Fun Sing Along Song for Kids
+- [Mr Golden Sun](https://plooshi.com/song/mr-golden-sun/): Lyrics
+- [Old MacDonald Had A Farm](https://plooshi.com/song/old-macdonald-had-a-farm/): Lyrics
+- [One Man Went to Mow](https://plooshi.com/song/one-man-went-to-mow/): Fun Counting Song for Kids
+- [One Two Buckle My Shoe](https://plooshi.com/song/one-two-buckle-my-shoe/): Lyrics
+- [Pop Goes The Weasel](https://plooshi.com/song/pop-goes-the-weasel/): Lyrics
+- [Potty Training Song](https://plooshi.com/song/potty-training-song/): Lyrics
+- [Rain Rain Go Away](https://plooshi.com/song/rain-rain-go-away/): Lyrics
+- [Ring Around the Rosie](https://plooshi.com/song/ring-around-the-rosy/): Classic Sing Along Nursery Rhyme for Kids
+- [Row Row Row Your Boat](https://plooshi.com/song/row-row-row-your-boat/): Lyrics
+- [Rub a Dub Dub](https://plooshi.com/song/rub-a-dub-dub/): Lyrics
+- [Simon Says](https://plooshi.com/song/simon-says/): Fun Action Game Song for Kids
+- [Skidamarink a Dink a Dink](https://plooshi.com/song/skidamarink-a-dink-a-dink/): Lyrics
+- [Skip to My Lou](https://plooshi.com/song/skip-to-my-lou/): Lyrics
+- [Sleep Baby Sleep](https://plooshi.com/song/sleep-baby-sleep/): Soothing Lullaby for Kids
+- [Somewhere Over the Rainbow](https://plooshi.com/song/somewhere-over-the-rainbow/): Soothing Lullaby for Kids
+- [Splish Splash Bath Song](https://plooshi.com/song/splish-splash-bath-song/): Fun Bath Time Song for Kids
+- [Take Me Out to the Ball Game](https://plooshi.com/song/take-me-out-to-the-ball-game/): Lyrics
+- [The Baseball Song](https://plooshi.com/song/the-baseball-song/): Fun Sports Song for Kids
+- [The Big Ship Sails](https://plooshi.com/song/the-big-ship-sails/): Classic Sing Along Nursery Rhyme for Kids
+- [The Counting Song](https://plooshi.com/song/the-counting-song/): Learn to Count 1 to 10 for Kids
+- [The Excavator Song](https://plooshi.com/song/the-excavator-song/): Fun Construction Song for Kids
+- [The Football Song](https://plooshi.com/song/the-football-song/): Fun Sports Song for Kids
+- [The Shapes Rap Song](https://plooshi.com/song/the-shapes-rap-song/): Fun Shapes Song for Kids
+- [The Shapes Song](https://plooshi.com/song/the-shapes-song/): Learn Shapes for Kids
+- [The Strawberry Song](https://plooshi.com/song/the-strawberry-song/): Fun Fruit Song for Kids
+- [This Little Light of Mine](https://plooshi.com/song/this-little-light-of-mine/): Lyrics
+- [Twinkle, Twinkle Little Star](https://plooshi.com/song/twinkle-twinkle-little-star/): Lyrics
+- [Wash Away Germs Song](https://plooshi.com/song/wash-away-germs-song/): Hand Washing Song for Kids
+- [Wheels on the Bus](https://plooshi.com/song/wheels-on-the-bus/): Lyrics
+- [Yankee Doodle](https://plooshi.com/song/yankee-doodle/): Lyrics
+
+## Coloring pages
+- [All 96 free printable coloring pages](https://plooshi.com/printable/): each has a print-ready PDF at /printable/<name>/
+- [Color online](https://plooshi.com/color/): color any page in the browser with tap-to-fill
+- Food: Ice Cream Cone, Food, Strawberry, Gingerbread Man, Watermelon, Pizza, Birthday Cake, Cake, Apple, Donut, Gingerbread House
+- Animals: Spider, Wolf, Shark, Hamster, Lion, Kitten, Owl, Jellyfish, Cow, Tiger, Alligator, Eagle, Llama, Teddy Bear, Squirrel, Fox, Koala, Bee, Sea Turtle, Chicken, Turkey, Ladybug, Dog, Fish, Horse, Reindeer, Cheetah, Octopus, Bird, Cat, Snake, Kitty, Butterfly, Bunny, Puppy
+- Nature: Phone, Family, Sun, Heart, Leaf, Ocean, Snowflake, Flower, Rainbow
+- Fantasy: Astronaut, Alien, Pirate, Ninja, Castle, Mermaid, Dragon, Princess, Unicorn
+- Holidays: Skeleton, Candy Cane, Cross, American Flag, Gingerbread Man, Pumpkin, Halloween, Turkey, Reindeer, Easter, Elf, Leprechaun, Christmas, Snowman, Christmas Tree, Santa, Gingerbread House
+- Dinosaurs: Triceratops, Dino, Dinosaur, Dragon, T-Rex
+- Vehicles: Excavator, Police Car, Dirt Bike, Tractor, Monster Truck, Airplane, Truck, Race Car, Train, Fire Truck, Car
+- Sports: Soccer, Baseball, Football, Basketball
+
+## Games
+- [Color Online](https://plooshi.com/color/): Color any of our coloring pages right on the screen.
+- [Dress Up Plooshi](https://plooshi.com/play/#dressup): Hats, glasses and bows — Plooshi wears them everywhere!
+- [Freeze Dance](https://plooshi.com/play/#freeze): Dance to the beat, then FREEZE when the music stops!
+- [Animal Quiz](https://plooshi.com/play/#quiz): Can you find the lion? Learn a fun fact each time.
+- [Memory Match](https://plooshi.com/play/#memory-panel): Flip the cards and find the animal pairs.
+- [Bubble Count](https://plooshi.com/play/#bubbles-panel): Pop the bubbles in order and learn to count!
+- [Xylophone](https://plooshi.com/play/#xylophone): Play Twinkle Twinkle and other songs.
+- [Color Plooshi](https://plooshi.com/play/#color): Pick colors and paint Plooshi any way you like.
+
+## Learn: fun facts and activities for kids
+- [Santa Facts for Kids](https://plooshi.com/santa-facts-for-kids/): Explore panda facts for kids! Learn about these adorable bears, their bamboo diet, and conservation efforts. Perfect for young animal lovers.
+- [Koala Facts for Kids](https://plooshi.com/koala-facts-for-kids/)
+- [Soccer Facts for Kids](https://plooshi.com/soccer-facts-for-kids/)
+- [Jaguar Facts for Kids](https://plooshi.com/jaguar-facts-for-kids/)
+- [Great White Shark Facts for Kids](https://plooshi.com/great-white-shark-facts-for-kids/)
+- [Alligator Facts for Kids](https://plooshi.com/alligator-facts-for-kids/)
+- [Grand Canyon Facts for Kids](https://plooshi.com/grand-canyon-facts-for-kids/)
+- [Hawaii Facts for Kids](https://plooshi.com/hawaii-facts-for-kids/)
+- [Texas Facts for Kids](https://plooshi.com/texas-facts-for-kids/)
+- [Whale Facts for Kids](https://plooshi.com/whale-facts-for-kids/)
+- [Australia Facts for Kids](https://plooshi.com/australia-facts-for-kids/)
+- [Zebra Facts for Kids](https://plooshi.com/zebra-facts-for-kids/)
+- [Ladybug Facts for Kids](https://plooshi.com/ladybug-facts-for-kids/)
+- [Florida Facts for Kids](https://plooshi.com/florida-facts-for-kids/)
+- [Kangaroo Facts for Kids](https://plooshi.com/kangaroo-facts-for-kids/)
+- [Mexico Facts for Kids](https://plooshi.com/mexico-facts-for-kids/)
+- [Tiger Facts for Kids](https://plooshi.com/tiger-facts-for-kids/)
+- [Rainforest Facts for Kids](https://plooshi.com/rainforest-facts-for-kids/)
+- [How To Make Stickers at Home](https://plooshi.com/how-to-make-stickers-at-home/): Discover how to make stickers at home! Explore creative and easy methods for designing and crafting custom stickers with kids. Perfect for adding a personal touch to projects and decorations.
+- [Find Your Superhero Name](https://plooshi.com/find-your-superhero-name/): Discover your superhero name with Plooshi Music! Fun and creative naming game for kids to explore their imagination and superpowers. Perfect for playtime!
+- [How To Make a Fake Campfire](https://plooshi.com/how-to-make-a-fake-campfire/): Learn how to make a fake campfire! Discover creative and safe ways to create the cozy ambiance of a campfire for indoor or pretend play with kids. Perfect for imaginative adventures.
+- [Sloth Facts for Kids](https://plooshi.com/sloth-facts-for-kids/): Discover sloth facts for kids! Learn about these slow-moving creatures, their unique adaptations, and life in the treetops. Perfect for young wildlife enthusiasts.
+- [Ocean Facts for Kids](https://plooshi.com/ocean-facts-for-kids/): Dive into ocean facts for kids! Explore the wonders of the deep blue sea, marine life, and the importance of ocean conservation. Perfect for young marine enthusiasts.
+- [Jellyfish Facts for Kids](https://plooshi.com/jellyfish-facts-for-kids/): Dive into jellyfish facts for kids! Learn about these graceful ocean creatures, their unique appearance, and how they survive in the sea. Ideal for young marine enthusiasts.
+- [Bee Facts for Kids](https://plooshi.com/bee-facts-for-kids/): Discover buzzing bee facts for kids! Learn about their roles in pollination, hive life, and how they make honey. Ideal for budding young scientists.
+- [Frog Facts for Kids](https://plooshi.com/frog-facts-for-kids/): Discover frog facts for kids! Learn about these amphibious creatures, their life cycles, and unique adaptations. Ideal for young wildlife enthusiasts.
+- [Turtle Facts for Kids](https://plooshi.com/turtle-facts-for-kids/): Explore turtle facts for kids! Learn about these fascinating reptiles, their shells, habitats, and unique adaptations. Perfect for young wildlife enthusiasts.
+- [Owl Facts for Kids](https://plooshi.com/owl-facts-for-kids/): Uncover owl facts for kids! Learn about these wise and mysterious birds, their hunting skills, and nocturnal habits. Ideal for young bird enthusiasts.
+- [Monkey Facts for Kids](https://plooshi.com/monkey-facts-for-kids/): Discover monkey facts for kids! Learn about these playful primates, their habitats, and unique behaviors. Perfect for young animal enthusiasts.
+- [Dinosaur Facts for Kids](https://plooshi.com/dinosaur-facts-for-kids/): Explore exciting dinosaur facts for kids! Learn about their vast world, different species, and fascinating history. Perfect for young dino enthusiasts.
+- [Statue of Liberty Facts for Kids](https://plooshi.com/statue-of-liberty-facts-for-kids/): Explore Statue of Liberty facts for kids! Learn about this iconic symbol of freedom, its history, and what it represents. Perfect for young history buffs.
+- [Earth Facts for Kids](https://plooshi.com/earth-facts-for-kids/): Discover fascinating Earth facts for kids! Learn about our planet's landscapes, ecosystems, and the importance of conservation. Perfect for young explorers.
+- [Neptune Facts for Kids](https://plooshi.com/neptune-facts-for-kids/): Dive into Neptune facts for kids! Learn about the distant ice giant, its stunning blue color, and mysterious storms. Ideal for young space enthusiasts.
+- [Artic Fox Facts for Kids](https://plooshi.com/artic-fox-facts-for-kids/): Discover Arctic Fox facts for kids: Learn about their snowy habitats, clever survival skills, and fluffy coats. Perfect for young animal lovers!
+- [Lion Facts for Kids](https://plooshi.com/lion-facts-for-kids/): Roar into lion facts for kids! Learn about the king of the jungle, their hunting prowess, and social structure. Perfect for young wildlife enthusiasts.
+- [Moon Facts for Kids](https://plooshi.com/moon-facts-for-kids-2/)
+- [Random Facts for Kids](https://plooshi.com/random-facts-for-kids/): Discover random facts for kids! Dive into a world of fascinating trivia, fun facts, and interesting tidbits. Perfect for young minds eager to learn something new and exciting.
+- [Facts for Kids](https://plooshi.com/facts-for-kids/): Explore a world of facts for kids! Dive into science, animals, and the environment with engaging trivia. Perfect for curious minds eager to learn.
+- [Fun Facts About Antarctica For Kids](https://plooshi.com/fun-facts-about-antarctica-for-kids/): Explore fun facts about Antarctica for kids! Discover the frozen continent's unique wildlife, extreme weather, and the importance of scientific research. Perfect for young explorers.
+- [Mars Facts for Kids](https://plooshi.com/mars-facts-for-kids/): Explore Mars facts for kids! Learn about the Red Planet, its surface, and the possibility of future human missions. Ideal for young space enthusiasts.
+- [Panda Facts for Kids](https://plooshi.com/panda-facts-for-kids/): Explore panda facts for kids! Learn about these adorable bears, their bamboo diet, and conservation efforts. Perfect for young animal lovers.
+- [Volcano Facts for Kids](https://plooshi.com/volcano-facts-for-kids/): Explore exciting volcano facts for kids! Learn about volcanic eruptions, lava, and their impact on the planet. Perfect for young earth science enthusiasts.
+- [Space Facts for Kids](https://plooshi.com/space-facts-for-kids/): Blast off to space facts for kids! Discover the wonders of the universe, planets, and stars. Ideal for young astronauts eager to explore the cosmos.
+- [Dolphin Facts for Kids](https://plooshi.com/dolphin-facts-for-kids/): Dive into dolphin facts for kids! Learn about their intelligence, communication, and playful nature. Ideal for young marine life enthusiasts.
+- [Tornado Facts for Kids](https://plooshi.com/tornado-facts-for-kids/): Dive into tornado facts for kids! Learn about these powerful weather phenomena, how they form, and safety tips. Ideal for young weather enthusiasts.
+- [Polar Bear Facts for Kids](https://plooshi.com/polar-bear-facts-for-kids/): Dive into polar bear facts for kids! Learn about these magnificent Arctic predators, their icy habitats, and survival skills. Ideal for young wildlife enthusiasts.
+- [Bat Facts for Kids](https://plooshi.com/bat-facts-for-kids/): Explore fascinating bat facts for kids! Learn about their nocturnal adventures, echo-location skills, and importance in nature. Perfect for young explorers.
+- [Cheetah Facts for Kids](https://plooshi.com/cheetah-facts-for-kids/): Discover speedy cheetah facts for kids! Learn about their incredible speed, hunting skills, and life on the savannah. Ideal for young animal enthusiasts.
+- [Fun Facts for Kids](https://plooshi.com/fun-facts-for-kids/): Discover fun facts for kids! Dive into a world of interesting trivia, cool facts, and educational tidbits. Perfect for young minds eager to learn and explore.
+- [Cat Facts for Kids](https://plooshi.com/cat-facts-for-kids/): Uncover fun cat facts for kids! Learn about their curious behaviors, agility, and the ways they communicate. Perfect for young feline fans.
+- [How To Make a Volcano?](https://plooshi.com/how-to-make-a-volcano/): Learn how to make a volcano! Create a fun and educational volcano experiment with kids using common household items. Perfect for hands-on science exploration and learning.
+- [Hurricane Facts for Kids](https://plooshi.com/hurricane-facts-for-kids/): Explore hurricane facts for kids! Learn about these powerful storms, how they form, and safety measures. Ideal for young weather enthusiasts.
+- [Saturn Facts for Kids](https://plooshi.com/saturn-facts-for-kids/): Explore Saturn facts for kids! Learn about the stunning rings, mysterious moons, and fascinating features of this gas giant. Perfect for young space enthusiasts.
+- [Animal Facts for Kids](https://plooshi.com/animal-facts-for-kids/): Dive into fun animal facts for kids! Explore the wild world of animals, their habitats, behaviors, and cool trivia. Perfect for curious young minds.
+- [Wolf Facts for Kids](https://plooshi.com/wolf-facts-for-kids/): Discover wild wolf facts for kids! Learn about their pack life, howls, and role in the ecosystem. Perfect for young wildlife enthusiasts.
+- [Dog Facts for Kids](https://plooshi.com/dog-facts-for-kids/): Uncover fun dog facts for kids! Learn about different breeds, their unique traits, and how they became humans' best friends. Perfect for young dog lovers.
+- [Turkey Facts for Kids](https://plooshi.com/turkey-facts-for-kids/): Gobble up turkey facts for kids! Discover interesting information about these birds, their habitats, and fun trivia. Perfect for young animal enthusiasts.
+- [Moon Facts for Kids](https://plooshi.com/moon-facts-for-kids/): Explore moon facts for kids! Learn about Earth's natural satellite, its phases, and fascinating lunar features. Ideal for young space enthusiasts.
+- [30 Giraffe Facts for Kids](https://plooshi.com/giraffe-facts-for-kids/): Explore 30 amazing giraffe facts for kids! Discover their tall tales, unique patterns, and gentle habits. Perfect for young wildlife enthusiasts.
+- [What Does Skidamarink Mean?](https://plooshi.com/what-does-skidamarink-mean/): "Skidamarink" is a fun, nonsensical word from the children's song "Skidamarink" that expresses affection and love. Perfect for singing and sharing with kids.
+
+## About
+- [About Plooshi](https://plooshi.com/about/)
+- [FAQs](https://plooshi.com/faqs/)
+- [Licensing and partnerships](https://plooshi.com/licensing/)
+- [Contact](https://plooshi.com/contact/)
+
+## Optional
+- [Full text of songs and articles](https://plooshi.com/llms-full.txt)
+- [New songs feed (RSS)](https://plooshi.com/feed.xml)
+- [Sitemap](https://plooshi.com/sitemap.xml)
