@@ -17,7 +17,7 @@ on:
       base_path:
         description: "Folder the site is served from: /plooshi-site for the github.io test address, empty for plooshi.com"
         required: false
-        default: "/plooshi-site"
+        default: ""
 permissions:
   contents: read
   pages: write
