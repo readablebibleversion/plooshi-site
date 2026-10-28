@@ -1,0 +1,15 @@
+{
+ "name": "Plooshi",
+ "short_name": "Plooshi",
+ "start_url": "/",
+ "display": "standalone",
+ "background_color": "#fffaf0",
+ "theme_color": "#5ec8f2",
+ "icons": [
+  {
+   "src": "/wp-content/uploads/2024/01/cropped-19fcebfc-ca65-498c-a9bf-1fc67c1f8320-192x192.webp",
+   "sizes": "192x192",
+   "type": "image/webp"
+  }
+ ]
+}

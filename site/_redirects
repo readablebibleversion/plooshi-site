@@ -1,0 +1,11 @@
+# Old WordPress URLs -> new pages (Netlify & Cloudflare Pages)
+/discography/  /songs/  301
+/our-channels/  /songs/  301
+/printables/  /printable/  301
+/my-account/  /  301
+/gallery/  /  301
+/song/  /songs/#lyrics  301
+/category/song/  /songs/#lyrics  301
+/category/nursery-rhyme/  /songs/#lyrics  301
+/blog/  /learn/  301
+/freebies/  /printable/  301
