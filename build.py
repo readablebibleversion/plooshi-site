@@ -11,10 +11,6 @@ DOMAIN = 'https://plooshi.com'
 UP = '/wp-content/uploads/'          # media is self-hosted inside ./site
 UP_ABS = DOMAIN + UP
 
-# Where forms post. None = Netlify Forms (works automatically on Netlify).
-# On Cloudflare Pages or GitHub Pages, set this to a form service URL, e.g. 'https://formspree.io/f/xxxxxxx'.
-FORM_ENDPOINT = None
-
 # Folder the site is served from. Empty for a real domain (plooshi.com, Netlify, Cloudflare).
 # For a GitHub Pages test address like username.github.io/plooshi-site, build with BASE_PATH=/plooshi-site.
 BASE = os.environ.get('BASE_PATH', '').rstrip('/')
@@ -173,15 +169,6 @@ def page(path, title, desc, body, active, jsonld, extra_js='', og_img=UP_ABS + '
     open(out, 'w', encoding='utf8').write(doc)
 
 
-def form_open(name, cls=''):
-    """Form tag that works with Netlify Forms by default, or any POST endpoint via FORM_ENDPOINT."""
-    c = f' class="{cls}"' if cls else ''
-    if FORM_ENDPOINT:
-        return f'<form{c} name="{name}" method="POST" action="{FORM_ENDPOINT}"><input type="hidden" name="_next" value="{DOMAIN}/thanks/">'
-    return (f'<form{c} name="{name}" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="bot-field">'
-            f'<input type="hidden" name="form-name" value="{name}"><p class="sr"><label>Leave empty <input name="bot-field"></label></p>')
-
-
 # ---------------------------------------------------------------- pieces
 ORG = {'@type': 'MusicGroup', '@id': DOMAIN + '/#plooshi', 'name': 'Plooshi', 'url': DOMAIN + '/',
        'genre': ["Children's Music", 'Nursery Rhymes', 'Lullabies'],
@@ -321,9 +308,8 @@ def build_home():
 </div></div></section>
 
 <section aria-labelledby="news-title"><div class="wrap">
-<div class="news reveal"><h2 id="news-title">Join the Plooshi Family 💙</h2><p>Get new songs and printables in your inbox. For grown-ups only!</p>
-{form_open('newsletter')}<label class="sr" for="em">Grown-up's email</label><input id="em" type="email" name="email" placeholder="grown-up@email.com" required autocomplete="email"><button class="btn sun" type="submit">Join</button></form>
-<small>We never share your email. Unsubscribe anytime.</small></div>
+<div class="news reveal"><h2 id="news-title">Join the Plooshi Family 💙</h2><p>Subscribe so you never miss a new song, lullaby or sing-along.</p>
+<p class="platforms" style="justify-content:center;margin-top:20px"><a class="btn sun" href="{YT_SUB}" target="_blank" rel="noopener">▶ Subscribe on YouTube</a> <a class="btn white" href="{SPOTIFY}" target="_blank" rel="noopener">🎧 Follow on Spotify</a></p></div>
 </div></section>'''
     ld = {'@context': 'https://schema.org', '@graph': [ORG, SITE_LD,
           {'@type': 'WebPage', '@id': DOMAIN + '/#webpage', 'url': DOMAIN + '/', 'name': 'Plooshi – Kids Songs, Nursery Rhymes & Free Coloring Pages', 'isPartOf': {'@id': DOMAIN + '/#website'}, 'about': {'@id': DOMAIN + '/#plooshi'}},
@@ -655,12 +641,8 @@ def songs_lyrics_index():
 
 
 # ---- hand-built grown-up pages
-def contact_form(name, subject):
-    return f'''{form_open(name, 'cform')}<input type="hidden" name="subject" value="{subject}">
-<label>Your name<input name="name" required autocomplete="name"></label>
-<label>Email<input type="email" name="email" required autocomplete="email"></label>
-<label>Message<textarea name="message" rows="6" required></textarea></label>
-<button class="btn" type="submit">Send message 💌</button></form>'''
+def email_button(subject):
+    return (f'<p style="margin-top:24px"><a class="btn" href="mailto:info@plooshi.com?subject={subject.replace(" ", "%20")}">💌 Email info@plooshi.com</a></p>')
 
 
 def simple_page(path, title, desc, h1, content):
@@ -675,18 +657,15 @@ def build_info_pages():
     simple_page('/about/', 'About Plooshi • Kids Music That Makes Learning Fun', meta(wp['about'])[1], 'About Plooshi',
                 f'<div class="about-mascot">{mascot(label="Plooshi")}</div>{about}<p><a class="btn" href="/songs/">▶ Meet us in our songs</a></p>')
     simple_page('/contact/', 'Contact Plooshi', 'Get in touch with Plooshi — questions, feedback, song requests and collaborations.', 'Contact Us',
-                f"<p>Have a question, a song request or just want to say hi? We'd love to hear from you! You can also email {mail}.</p>{contact_form('contact', 'Contact')}")
+                f"<p>Have a question, a song request or just want to say hi? We'd love to hear from you! Email us at {mail}.</p>{email_button('Hello Plooshi')}")
     lic = clean(wp['licensing']['content']['rendered'])
     simple_page('/licensing/', 'Music Licensing & Partnerships • Plooshi', meta(wp['licensing'])[1] or 'Licensing, brand and advertising opportunities with Plooshi.',
-                'Licensing & Partnerships', f'{lic}{contact_form("licensing", "Licensing")}')
+                'Licensing & Partnerships', f'{lic}{email_button("Licensing enquiry")}')
     faqs = FAQ + [('Where can I stream Plooshi?', 'Plooshi is on all major platforms including Spotify, Apple Music, YouTube, Deezer, Tidal and more.')]
     body = ''.join(f'<details class="qa"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in faqs)
     page('/faqs/', 'FAQs • Plooshi', 'Answers to common questions about Plooshi songs, printables and games.', article_shell('FAQs', 'Questions &amp; Answers', body), '',
          {'@context': 'https://schema.org', '@graph': [ORG, {'@type': 'FAQPage', 'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in faqs]},
                                                        crumbs(('Home', '/'), ('FAQs', '/faqs/'))]})
-    page('/thanks/', 'Thank you! • Plooshi', 'Thanks for getting in touch with Plooshi.', article_shell('Thanks', 'Thank you! 💙',
-         f'<div class="about-mascot mascot-stage"><div class="bubble" aria-live="polite"></div>{mascot(label="Plooshi says thanks. Tap me!")}</div>'
-         '<p style="text-align:center">We got your message. Tap Plooshi for a happy dance, then <a href="/">head home</a>!</p>'), '', {}, noindex=True)
 
 
 def build_404():

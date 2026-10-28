@@ -17,15 +17,13 @@ check_links.py      ← checks that no links or images are broken
 
 All three are free for a site this size (~100 MB, ~220 pages).
 
-### Option A: Netlify (easiest, and the forms work right away)
+### Option A: Netlify
 
 **Fastest:** go to <https://app.netlify.com/drop> and drag the `site` folder onto the page. Done.
 
 **With Git (auto-deploys on every push):** push this folder to a GitHub repo → Netlify → *Add new site → Import from Git* → pick the repo. `netlify.toml` already tells Netlify to publish `site/` with no build command.
 
 Then: *Domain management → Add domain → plooshi.com*, and follow the DNS instructions.
-
-Forms: the contact, licensing and newsletter forms use **Netlify Forms** automatically. Submissions show up under *Forms* in the Netlify dashboard, where you can turn on email notifications.
 
 ### Option B: Cloudflare Pages
 
@@ -36,7 +34,6 @@ Cloudflare dashboard → *Workers & Pages → Create → Pages*:
 Then *Custom domains → Set up a domain → plooshi.com*. This is easy if your DNS is already on Cloudflare.
 
 Redirects (`site/_redirects`) and security/caching headers (`site/_headers`) work automatically.
-⚠️ Forms: Cloudflare doesn't process form submissions. See **Forms on Cloudflare / GitHub** below.
 
 ### Option C: GitHub Pages
 
@@ -52,13 +49,7 @@ Redirects (`site/_redirects`) and security/caching headers (`site/_headers`) wor
 Notes for GitHub Pages:
 - It ignores `_redirects` and `_headers`. That's fine: every old URL (e.g. `/discography/`) also has a small redirect page, so links still land in the right place.
 - Repos are limited to 1 GB and files to 100 MB, well above what this site needs.
-- ⚠️ Forms need a form service. See below.
-
-### Forms on Cloudflare / GitHub
-
-1. Create a free form at a service such as [Formspree](https://formspree.io) and copy its endpoint URL.
-2. In `build.py`, set `FORM_ENDPOINT = 'https://formspree.io/f/your-id'`.
-3. Run `python build.py` and redeploy.
+- The site has no forms; the contact and licensing pages link to info@plooshi.com.
 
 ### Pointing plooshi.com at the new host
 
