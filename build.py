@@ -90,7 +90,8 @@ def mascot(cls='mascot', coloring=False, label='Plooshi the fluffy blue friend. 
 
 
 # Outfits for Plooshi. Every mascot carries them hidden; main.js shows the ones picked on the Play page.
-OUTFIT_HATS = [('party', '🎉'), ('crown', '👑'), ('tophat', '🎩'), ('cap', '🧢'), ('grad', '🎓'), ('witch', '🧙'), ('santa', '🎅'), ('pumpkin', '🎃')]
+OUTFIT_HATS = [('party', '🎉'), ('crown', '👑'), ('tophat', '🎩'), ('cap', '🧢'), ('grad', '🎓'), ('witch', '🧙'), ('santa', '🎅'), ('pumpkin', '🎃'),
+               ('hearts', '💕'), ('clover', '🍀'), ('chick', '🐣'), ('leaves', '🍂')]
 OUTFIT_EYES = [('shades', '🕶️'), ('specs', '👓')]
 OUTFIT_NECK = [('bow', '🎀'), ('medal', '🏅'), ('scarf', '🧣')]
 _ink = 'stroke="#1d3260" stroke-width="5" stroke-linejoin="round"'
@@ -104,7 +105,7 @@ ACCESSORIES = '<g class="acc" aria-hidden="true">' + ''.join([
     '<text x="246" y="66" font-size="30" text-anchor="middle">⭐</text></g>',
     f'<g data-acc="hat-santa" display="none"><path d="M128,108 Q132,34 212,28 Q276,28 306,92 Q270,58 244,62 Q266,86 274,108Z" fill="#e53935" {_ink}/>'
     f'<rect x="116" y="92" width="170" height="30" rx="15" fill="#fff" {_ink}/><circle cx="304" cy="94" r="18" fill="#fff" {_ink}/></g>',
-    ] + [f'<text data-acc="hat-{k}" display="none" x="200" y="116" font-size="118" text-anchor="middle">{e}</text>' for k, e in OUTFIT_HATS if k in ('crown', 'tophat', 'cap', 'grad', 'pumpkin')]
+    ] + [f'<text data-acc="hat-{k}" display="none" x="200" y="116" font-size="118" text-anchor="middle">{e}</text>' for k, e in OUTFIT_HATS if k not in ('party', 'witch', 'santa')]
     + [f'<text data-acc="eyes-{k}" display="none" x="200" y="284" font-size="168" text-anchor="middle">{e}</text>' for k, e in OUTFIT_EYES]
     + [f'<text data-acc="neck-{k}" display="none" x="200" y="398" font-size="78" text-anchor="middle">{e}</text>' for k, e in OUTFIT_NECK]) + '</g>'
 
@@ -140,7 +141,7 @@ FOOTER = f'''<footer><div class="wrap">
 <div><h2>Listen</h2><a href="{SPOTIFY}" target="_blank" rel="noopener">Spotify</a><a href="{YOUTUBE}" target="_blank" rel="noopener">YouTube</a><a href="/songs/#lyrics">Song Lyrics</a><a href="/bedtime/">Bedtime &amp; Lullabies</a><a href="/feed.xml">New Songs (RSS)</a><a href="/licensing/">Licensing</a></div>
 <div><h2>Grown-ups</h2><a href="/about/">About Plooshi</a><a href="/faqs/">FAQs</a><a href="/contact/">Contact</a><a href="/privacy-policy-2/">Privacy</a><a href="/terms-of-service/">Terms</a></div>
 </div>
-<div class="legal">© {datetime.date.today().year} Plooshi. All rights reserved. Made with 💙 for little listeners.</div>
+<div class="legal">© <span data-year>{datetime.date.today().year}</span> Plooshi. All rights reserved. Made with 💙 for little listeners.</div>
 </div></footer>'''
 
 
@@ -904,16 +905,32 @@ def today_section():
 </div></section>'''
 
 
-SEASON_PRINTS = {'halloween': ['halloween-coloring-page', 'pumpkin-coloring-page', 'skeleton-coloring-page', 'spider-coloring-page'],
-                 'christmas': ['santa-coloring-page', 'christmas-tree-coloring-page', 'snowman-coloring-page', 'gingerbread-man-coloring-page']}
+# One banner per holiday on the home page; main.js shows the one whose dates are on (see HOLIDAYS in main.js)
+HOLIDAY_BANNERS = [
+    ('newyear', 'Happy New Year! 🎉', 'Start the year with a party! Color a cake and make a wish.', '#1d3260,#8b6cf0',
+     ['cake-coloring-page', 'birthday-cake-coloring-page', 'heart-coloring-page', 'sun-coloring-page']),
+    ('valentines', "Happy Valentine's Day! 💖", 'Color a heart for someone you love.', '#d81b72,#ff8a3d',
+     ['heart-coloring-page', 'teddy-bear-coloring-page', 'flower-coloring-page', 'unicorn-coloring-page']),
+    ('stpatricks', "Happy St. Patrick's Day! 🍀", 'Leprechauns, rainbows and a little bit of luck!', '#0f7a3f,#2bb673',
+     ['leprechaun-coloring-page', 'free-rainbow-coloring-page', 'leaf-coloring-page', 'flower-coloring-page']),
+    ('easter', 'Happy Easter! 🐣', 'Bunnies, chicks and spring flowers to color.', '#8b6cf0,#f9a8d4',
+     ['easter-coloring-page', 'bunny-coloring-page', 'chicken-coloring-page', 'flower-coloring-page']),
+    ('july4', 'Happy Fourth of July! 🎆', 'Red, white and blue coloring pages for the big day.', '#1d3260,#b4232a',
+     ['american-flag-coloring-page', 'eagle-coloring-page', 'baseball-coloring-page', 'watermelon-coloring-page']),
+    ('halloween', 'Happy Halloween! 🎃', 'Spooky-silly coloring pages for little monsters. Tap Plooshi for a Halloween surprise!', '#2a1f6e,#5b2a86',
+     ['halloween-coloring-page', 'pumpkin-coloring-page', 'skeleton-coloring-page', 'spider-coloring-page']),
+    ('thanksgiving', 'Happy Thanksgiving! 🦃', "Gobble gobble! What are you thankful for today?", '#8b5a2b,#ff8a3d',
+     ['turkey-coloring-page', 'pumpkin-coloring-page', 'apple-coloring-page', 'family-coloring-page']),
+    ('christmas', 'Merry Christmas! 🎄', 'Festive coloring pages for the holidays. Plooshi has its Santa hat on!', '#0f5132,#b4232a',
+     ['santa-coloring-page', 'christmas-tree-coloring-page', 'snowman-coloring-page', 'gingerbread-man-coloring-page']),
+]
 
 
 def season_banners():
     out = ''
-    for key, title, sub in [('halloween', 'Happy Halloween! 🎃', 'Spooky-silly coloring pages for little monsters. Tap Plooshi for a Halloween surprise!'),
-                            ('christmas', 'Merry Christmas! 🎄', 'Festive coloring pages for the holidays. Plooshi has its Santa hat on!')]:
-        ps = [p for p in PRINTS if p['s'] in SEASON_PRINTS[key]]
-        out += f'''<section class="season-banner {key}"><div class="wrap"><div class="sec-head"><span class="tag">This week</span><h2>{title}</h2><p>{sub}</p></div>
+    for key, title, sub, grad, slugs in HOLIDAY_BANNERS:
+        ps = [p for p in PRINTS if p['s'] in slugs]
+        out += f'''<section class="season-banner {key}" hidden style="background:linear-gradient(135deg,{grad})"><div class="wrap"><div class="sec-head"><span class="tag">This week</span><h2>{title}</h2><p>{sub}</p></div>
 <div class="pgrid">{''.join(pcard(p) for p in ps)}</div></div></section>'''
     return out
 

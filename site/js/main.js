@@ -41,16 +41,46 @@
     oops() { tone(220, 0.25, 'triangle', 0.15); tone(185, 0.3, 'triangle', 0.15, 0.12); },
     jingle() { ['C4', 'E4', 'G4', 'C5', 'G4', 'C5'].forEach((n, i) => tone(NOTES[n], 0.4, 'sine', 0.22, i * 0.11)); }
   };
-  /* ---------- Season (Halloween / Christmas); ?season=halloween|christmas|none to preview ---------- */
+  /* ---------- Holidays: switch on and off by themselves from the visitor's date.
+     Preview any of them with ?season=valentines|stpatricks|easter|july4|halloween|thanksgiving|christmas|newyear (or none). */
+  const HOLIDAYS = {
+    newyear:      { hat: 'party',   deco: ['🎉', '✨', '🎊', '⭐'], sticker: '🎉', say: ['Happy New Year! 🎉', 'Hip hip hooray! 🎊', "Let's count down! 3, 2, 1! ✨"] },
+    valentines:   { hat: 'hearts',  deco: ['💖', '💕', '💗', '💝'], sticker: '💖', say: ['Happy Valentine\'s Day! 💖', 'I love you! 💕', 'You make my heart happy! 💗'] },
+    stpatricks:   { hat: 'clover',  deco: ['🍀', '☘️', '🌈', '🪙'], sticker: '🍀', say: ['Happy St. Patrick\'s Day! 🍀', 'Find the pot of gold! 🌈', 'Lucky you! ☘️'] },
+    easter:       { hat: 'chick',   deco: ['🥚', '🐣', '🌷', '🐰'], sticker: '🐣', say: ['Happy Easter! 🐣', 'Hop hop hop! 🐰', "Let's find eggs! 🥚"] },
+    july4:        { hat: 'tophat',  deco: ['🎆', '⭐', '🎇', '🇺🇸'], sticker: '🎆', say: ['Happy Fourth of July! 🎆', 'Boom! Fireworks! 🎇', 'Red, white and blue! 🇺🇸'] },
+    halloween:    { hat: 'witch',   deco: ['🦇', '🦇', '🎃', '👻'], sticker: '🎃', fly: true, say: ['Boo! 👻', 'Happy Halloween! 🎃', 'Trick or treat! 🍬'] },
+    thanksgiving: { hat: 'leaves',  deco: ['🍂', '🍁', '🦃', '🍂'], sticker: '🦃', say: ['Happy Thanksgiving! 🦃', 'Gobble gobble! 🍂', "I'm thankful for YOU! 💙"] },
+    christmas:    { hat: 'santa',   deco: ['❄️', '❄️', '⛄', '⭐'], sticker: '🎅', say: ['Ho ho ho! 🎅', 'Merry Christmas! 🎄', 'Is it snowing? ❄️'] }
+  };
+  function holidayOn(d) {
+    const y = d.getFullYear(), t = new Date(y, d.getMonth(), d.getDate()).getTime();
+    const day = (m, dd) => new Date(y, m - 1, dd).getTime(), within = (a, b) => t >= a && t <= b, DAY = 864e5;
+    // Easter Sunday (Anonymous Gregorian algorithm)
+    const a = y % 19, b = Math.floor(y / 100), c = y % 100, dd = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3),
+          h = (19 * a + b - dd - g + 15) % 30, i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451),
+          easter = day(Math.floor((h + l - 7 * m + 114) / 31), ((h + l - 7 * m + 114) % 31) + 1);
+    // US Thanksgiving: the fourth Thursday of November
+    const nov1 = new Date(y, 10, 1).getDay(), thanks = day(11, 1 + ((4 - nov1 + 7) % 7) + 21);
+    if (within(day(12, 30), day(12, 31)) || within(day(1, 1), day(1, 2))) return 'newyear';
+    if (within(day(2, 7), day(2, 14))) return 'valentines';
+    if (within(day(3, 10), day(3, 17))) return 'stpatricks';
+    if (within(easter - 7 * DAY, easter + DAY)) return 'easter';
+    if (within(day(6, 28), day(7, 5))) return 'july4';
+    if (within(day(10, 10), day(11, 1))) return 'halloween';
+    if (within(thanks - 6 * DAY, thanks + DAY)) return 'thanksgiving';
+    if (within(day(12, 1), day(12, 26))) return 'christmas';
+    return '';
+  }
   const season = (() => {
     const q = new URLSearchParams(location.search).get('season');
-    if (q) return q === 'none' ? '' : q;
-    const d = new Date(), m = d.getMonth() + 1, day = d.getDate();
-    if ((m === 10 && day >= 10) || (m === 11 && day === 1)) return 'halloween';
-    if (m === 12 && day <= 26) return 'christmas';
-    return '';
+    if (q) return q === 'none' || !HOLIDAYS[q] ? '' : q;
+    return holidayOn(new Date());
   })();
+  const H = HOLIDAYS[season] || null;
   if (season) document.documentElement.dataset.season = season;
+  $$('.season-banner').forEach(b => { b.hidden = !b.classList.contains(season || '-'); });
+  $$('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });   // footer © year stays current
 
   /* ---------- Stickers (kept only on this device, no account needed) ---------- */
   const STICKERS = [
@@ -63,7 +93,7 @@
     ['quiz', '🦁', 'Animal Expert', 'Get 5 right in the Animal Quiz'], ['dress', '🎩', 'Fashion Friend', 'Dress up Plooshi'],
     ['read', '📚', 'Bookworm', 'Listen to a Read-to-me page'], ['explorer', '🔭', 'Explorer', 'Visit 3 fun fact pages'],
     ['bedtime', '🌙', 'Sleepy Head', 'Start the bedtime timer'], ['today', '🎁', 'Surprise Seeker', "Open today's surprise"],
-    ['spooky', season === 'christmas' ? '🎅' : '🎃', 'Holiday Friend', 'Tap Plooshi on a holiday'], ['pal', '🏆', 'Plooshi Pal', 'Collect 15 stickers']
+    ['spooky', H ? H.sticker : '🎈', 'Holiday Friend', 'Tap Plooshi on a holiday'], ['pal', '🏆', 'Plooshi Pal', 'Collect 15 stickers']
   ];
   function earned() { return store.get('stickers', {}); }
   function syncStickerBtn() {
@@ -125,8 +155,7 @@
 
   /* ---------- Mascot ---------- */
   const phrases = ['Hi friend! 👋', "Let's sing! 🎵", 'Tee-hee! That tickles!', 'Boing boing! 🦘', 'You are awesome! ⭐', 'Wanna color with me? 🖍️', 'Wiggle your toes! 🦶', "I'm Plooshi! 💙", 'Clap your hands! 👏', 'High five! ✋'];
-  if (season === 'halloween') phrases.unshift('Boo! 👻', 'Happy Halloween! 🎃', 'Trick or treat! 🍬');
-  if (season === 'christmas') phrases.unshift('Ho ho ho! 🎅', 'Merry Christmas! 🎄', 'Is it snowing? ❄️');
+  if (H) phrases.unshift(...H.say);
   $$('.mascot').forEach(m => {
     const stage = m.closest('.mascot-stage'), bubble = stage && $('.bubble', stage), hint = stage && $('.tap-hint', stage);
     let i = 0, timer;
@@ -272,7 +301,7 @@
   /* ---------- Plooshi's outfit (chosen on the Play page, worn on every page) ---------- */
   function outfit() {
     const o = Object.assign({ hat: '', eyes: '', neck: '' }, store.get('outfit', {}));
-    if (!store.get('outfit', null) && season) o.hat = season === 'christmas' ? 'santa' : 'witch';
+    if (!store.get('outfit', null) && H) o.hat = H.hat;   // holiday hat until the child picks their own outfit
     return o;
   }
   function applyOutfit(o = outfit()) {
@@ -285,13 +314,13 @@
   Object.assign(window.Plooshi, { outfit, applyOutfit });
 
   /* ---------- Seasonal decorations in page headers ---------- */
-  if (season && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const icons = season === 'halloween' ? ['🦇', '🦇', '🎃', '👻'] : ['❄️', '❄️', '⛄', '⭐'];
+  if (H && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const icons = H.deco;
     $$('.hero, .phero').forEach(h => {
       const d = document.createElement('div'); d.className = 'season-deco'; d.setAttribute('aria-hidden', 'true');
-      for (let k = 0; k < (season === 'halloween' ? 5 : 14); k++) {
+      for (let k = 0; k < (H.fly ? 5 : 14); k++) {
         const s = document.createElement('span'); s.textContent = icons[k % icons.length];
-        if (season === 'halloween') { s.style.top = 8 + Math.random() * 60 + '%'; s.style.animationDuration = 14 + Math.random() * 10 + 's'; }
+        if (H.fly) { s.style.top = 8 + Math.random() * 60 + '%'; s.style.animationDuration = 14 + Math.random() * 10 + 's'; }
         else { s.style.left = Math.random() * 100 + '%'; s.style.animationDuration = 9 + Math.random() * 9 + 's'; s.style.fontSize = 1 + Math.random() * 1.2 + 'rem'; }
         s.style.animationDelay = -Math.random() * 20 + 's';
         d.appendChild(s);

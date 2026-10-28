@@ -66,7 +66,13 @@ Notes for GitHub Pages:
 - **Play** (`/play/`): Dress Up Plooshi (the outfit shows on every page), Freeze Dance, Animal Quiz, Memory Match, Bubble Count, Xylophone and Color Plooshi.
 - **Sticker book** (`/stickers/`): 20 stickers earned by playing, watching, coloring and reading. They're saved only in the visitor's own browser.
 - **Today's surprise** on the home page (a new song, picture and fact each day), **Read to me** on fact and printable pages, and a **Bedtime** page (`/bedtime/`) with a sleep timer and night light.
-- **Seasons:** Halloween (from Oct 10 to Nov 1) and Christmas (Dec 1 to 26) switch on automatically: a witch or Santa hat, bats or snow, and holiday coloring pages. Preview any time with `?season=halloween`, `?season=christmas` or `?season=none`.
+- **Holidays switch on and off by themselves**, based on the visitor's date. Each one brings its own Plooshi hat, floating decorations, things Plooshi says and a banner of themed coloring pages. No rebuild is needed:
+  - New Year's (Dec 30 to Jan 2), Valentine's Day (Feb 7 to 14), St. Patrick's Day (Mar 10 to 17)
+  - Easter (the week before Easter Sunday through Monday; worked out each year), Fourth of July (Jun 28 to Jul 5)
+  - Halloween (Oct 10 to Nov 1), Thanksgiving (the week of the 4th Thursday in November), Christmas (Dec 1 to 26)
+
+  Preview any holiday with `?season=valentines` (or `stpatricks`, `easter`, `july4`, `halloween`, `thanksgiving`, `christmas`, `newyear`), or `?season=none`. To change the dates, hats or sayings, edit `HOLIDAYS` in `site/js/main.js`. Banner coloring pages are set in `HOLIDAY_BANNERS` in `build.py`.
+- **Footer year** updates by itself every January 1.
 - **Site files:** `sitemap.xml` (with video details), `robots.txt`, `feed.xml` (RSS of new songs), `llms.txt` and `llms-full.txt` (a guide for AI assistants), `humans.txt`, `.well-known/security.txt`, favicon and app icons.
 
 ## Updating the site

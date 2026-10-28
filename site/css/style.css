@@ -453,10 +453,7 @@ body.night main{position:relative;z-index:1}
 .goodnight.open{display:grid}
 
 /* ---------- Seasonal ---------- */
-.season-banner{display:none}
-html[data-season="halloween"] .season-banner.halloween,html[data-season="christmas"] .season-banner.christmas{display:block}
-.season-banner.halloween{background:linear-gradient(135deg,#2a1f6e,#5b2a86)}
-.season-banner.christmas{background:linear-gradient(135deg,#0f5132,#b4232a)}
+.season-banner[hidden]{display:none}
 .season-banner .sec-head h2,.season-banner .sec-head p{color:#fff}
 .season-deco{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
 .season-deco span{position:absolute;font-size:1.8rem;opacity:.85;animation:drift-down linear infinite}
