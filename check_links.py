@@ -5,6 +5,7 @@ Run:  python check_links.py
 import collections, glob, os, re
 
 SITE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'site')
+BASE = os.environ.get('BASE_PATH', '').rstrip('/')   # same setting as build.py
 
 
 def exists(p):
@@ -16,6 +17,11 @@ bad = collections.Counter()
 pages = glob.glob(os.path.join(SITE, '**', '*.html'), recursive=True)
 for f in pages:
     for u in re.findall(r'(?:href|src)="(/[^"#?]*)', open(f, encoding='utf8').read()):
+        if BASE:
+            if not u.startswith(BASE + '/'):
+                bad['missing base: ' + u] += 1
+                continue
+            u = u[len(BASE):]
         if not (exists(SITE + u) or exists(os.path.join(SITE + u, 'index.html'))):
             bad[u] += 1
 print(f'{len(pages)} pages checked, {len(bad)} broken targets')

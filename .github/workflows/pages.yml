@@ -1,13 +1,23 @@
-# Publishes ./site to GitHub Pages. Runs only when started by hand:
+# Publishes the site to GitHub Pages. Runs only when started by hand:
 # repo Actions tab → "Deploy to GitHub Pages" → Run workflow.
 # One-time setup: repo Settings → Pages → Source: "GitHub Actions"
 # (private repos need GitHub Pro/Team for Pages).
+#
+# "base_path" is the folder the site lives in:
+#   /plooshi-site  → test address  https://<username>.github.io/plooshi-site/  (hidden from search engines)
+#   (leave empty)  → custom domain  https://plooshi.com/  (set it under Settings → Pages → Custom domain)
+#
 # To deploy on every push instead, add under `on:`
 #   push:
 #     branches: [main]
 name: Deploy to GitHub Pages
 on:
   workflow_dispatch:
+    inputs:
+      base_path:
+        description: "Folder the site is served from: /plooshi-site for the github.io test address, empty for plooshi.com"
+        required: false
+        default: "/plooshi-site"
 permissions:
   contents: read
   pages: write
@@ -23,6 +33,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build site
+        env:
+          BASE_PATH: ${{ inputs.base_path }}
+        run: |
+          python build.py
+          python check_links.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -35,13 +35,14 @@
   if (mem) {
     const animals = [['🐸', 'Frog', 'C5'], ['🦆', 'Duck', 'E5'], ['🐑', 'Sheep', 'G4'], ['🐪', 'Camel', 'A4'], ['🐵', 'Monkey', 'D5'], ['🦈', 'Shark', 'C4'], ['🕷️', 'Spider', 'F4'], ['🐰', 'Bunny', 'B4']];
     const moves = $('#mem-moves'), best = $('#mem-best');
+    const avatar = $('.logo img').getAttribute('src');  // already carries any sub-folder prefix
     function deal() {
       mem.innerHTML = ''; let first = null, lock = false, n = 0, found = 0;
       moves.textContent = 0; best.textContent = store.get('memBest', '—');
       const deck = [...animals, ...animals].sort(() => Math.random() - 0.5);
       deck.forEach(([e, name, note]) => {
         const c = document.createElement('button'); c.className = 'mcard'; c.setAttribute('aria-label', 'Hidden card');
-        c.innerHTML = `<span class="f"><img src="/assets/plooshi-avatar.jpg" alt="" width="60" height="60"></span><span class="b">${e}</span>`;
+        c.innerHTML = `<span class="f"><img src="${avatar}" alt="" width="60" height="60"></span><span class="b">${e}</span>`;
         c.addEventListener('click', () => {
           if (lock || c.classList.contains('flip') || c.classList.contains('done')) return;
           c.classList.add('flip'); c.setAttribute('aria-label', name); tone(NOTES[note], 0.4);

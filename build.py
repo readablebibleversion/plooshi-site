@@ -14,6 +14,10 @@ UP_ABS = DOMAIN + UP
 # Where forms post. None = Netlify Forms (works automatically on Netlify).
 # On Cloudflare Pages or GitHub Pages, set this to a form service URL, e.g. 'https://formspree.io/f/xxxxxxx'.
 FORM_ENDPOINT = None
+
+# Folder the site is served from. Empty for a real domain (plooshi.com, Netlify, Cloudflare).
+# For a GitHub Pages test address like username.github.io/plooshi-site, build with BASE_PATH=/plooshi-site.
+BASE = os.environ.get('BASE_PATH', '').rstrip('/')
 SPOTIFY = 'https://open.spotify.com/artist/7im2jVMioz2l4PWG37YbFV'
 YOUTUBE = 'https://www.youtube.com/@plooshimusic'
 YT_SUB = 'https://www.youtube.com/@plooshimusic?sub_confirmation=1'
@@ -736,8 +740,22 @@ def build_hosting():
               open(os.path.join(SITE, 'site.webmanifest'), 'w'), indent=1)
 
 
+def apply_base():
+    """When serving from a sub-folder, prefix every root link with BASE and keep the test copy out of search results."""
+    if not BASE: return
+    import glob
+    for f in glob.glob(os.path.join(SITE, '**', '*.html'), recursive=True):
+        h = open(f, encoding='utf8').read()
+        h = re.sub(r'((?:href|src|action)=")/(?!/)', r'\g<1>' + BASE + '/', h)
+        h = h.replace('url=/', 'url=' + BASE + '/')
+        h = re.sub(r'<meta name="robots" content="[^"]*">', '<meta name="robots" content="noindex,nofollow">', h)
+        open(f, 'w', encoding='utf8').write(h)
+    open(os.path.join(SITE, 'robots.txt'), 'w').write('User-agent: *\nDisallow: /\n')
+
+
 if __name__ == '__main__':
     build_home(); build_songs(); build_printables(); build_play()
     build_printable_pages(); build_song_pages(); songs_lyrics_index()
     build_articles(); build_learn(); build_info_pages(); build_404(); build_hosting()
+    apply_base()
     print('Built', len(PAGES), 'pages into', SITE)

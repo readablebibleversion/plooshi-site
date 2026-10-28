@@ -43,6 +43,9 @@ Redirects (`site/_redirects`) and security/caching headers (`site/_headers`) wor
 1. Push this folder to a GitHub repo (branch `main`).
 2. Repo → *Settings → Pages → Build and deployment → Source: **GitHub Actions***.
 3. Publish with the included workflow: *Actions → Deploy to GitHub Pages → Run workflow*. It only runs when started by hand. To deploy on every push instead, see the comment at the top of `.github/workflows/pages.yml`.
+   - **Test address** (default `base_path` = `/plooshi-site`): the site appears at `https://<username>.github.io/plooshi-site/` and is hidden from search engines.
+   - **Going live on plooshi.com:** set the custom domain under *Settings → Pages*, then run the workflow with `base_path` **empty**.
+   - To build the subfolder version yourself: `BASE_PATH=/plooshi-site python build.py`. Run plain `python build.py` again before committing, so `site/` stays the plooshi.com version.
    Pages on a private repo needs GitHub Pro or Team; on a free plan, make the repo public or use Netlify / Cloudflare instead.
 4. *Settings → Pages → Custom domain:* `plooshi.com` (the `site/CNAME` file is already set), then tick **Enforce HTTPS** once the certificate is ready.
 
