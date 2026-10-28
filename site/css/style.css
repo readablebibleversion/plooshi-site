@@ -470,3 +470,12 @@ html[data-season="halloween"] .season-deco span{animation-name:flap}
 .spotify-facade p{margin:0;opacity:.9;font-weight:700}
 .spotify-facade .btn{background:#fff;color:#127a3a;box-shadow:0 6px 0 rgba(0,0,0,.25)}
 .listen iframe{min-height:352px}
+.lead-text{font-size:1.25rem;font-weight:700;color:var(--ink)}
+.quick-facts{background:var(--sky-l);border-radius:24px;padding:18px 22px;margin:20px 0 26px}
+.quick-facts h2{margin-top:0;font-size:1.5rem}
+.quick-facts dl{display:grid;gap:8px;margin:0}
+.quick-facts dl div{display:grid;grid-template-columns:130px 1fr;gap:12px;background:#fff;border-radius:14px;padding:10px 14px}
+.quick-facts dt{font-family:var(--font-display);font-weight:800;color:var(--sky-d)}
+.quick-facts dd{margin:0}
+@media (max-width:520px){.quick-facts dl div{grid-template-columns:1fr;gap:2px}}
+.prose ol.facts li{padding:4px 0}

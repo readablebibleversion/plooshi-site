@@ -694,13 +694,16 @@ def build_articles():
 
 
 def learn_thumb(a, i):
+    pr = next((p for p in PRINTS if p['s'] == a.get('print')), None)
+    if pr:
+        return f'<img src="{thumb(pr)}" alt="" width="400" height="309" loading="lazy" style="object-fit:contain;background:#fff">'
     if a['img']:
         return f'<img src="{a["img"]}" alt="" width="768" height="432" loading="lazy">'
     words = a['p'].strip('/').replace('-', ' ')
     hit = next((p for p in PRINTS if re.search(r'\b' + re.escape(p['t'].lower()) + r's?\b', words)), None)
     if hit:  # no featured image on WordPress, so borrow the matching coloring page
         return f'<img src="{thumb(hit)}" alt="" width="400" height="309" loading="lazy" style="object-fit:contain;background:#fff">'
-    emoji = next(e for c, e, _ in LEARN_CATS if c == a['c'])
+    emoji = a.get('e') or next(e for c, e, _ in LEARN_CATS if c == a['c'])
     return f'<span class="tile t{i % 4}" aria-hidden="true">{emoji}</span>'
 
 
@@ -801,6 +804,81 @@ for _t, _x in WP:
         FACTS.append(dict(t=_name, e=ANIMAL_EMOJI[_key], f=_f, p='/' + _x['slug'] + '/'))
     elif _key in OTHER_EMOJI:
         FACTS.append(dict(t=_name, e=OTHER_EMOJI[_key], f=_f, p='/' + _x['slug'] + '/'))
+
+
+# ---------------------------------------------------------------- animal fact pages written for the new site (data/animals-*.json)
+import glob as _glob
+ANIMALS = []
+for _f in sorted(_glob.glob(os.path.join(ROOT, 'data', 'animals-*.json'))):
+    ANIMALS += json.load(open(_f, encoding='utf8'))
+for _a in ANIMALS:
+    _a['path'] = f"/{_a['s']}-facts-for-kids/"
+    _short = next((f for f in _a['facts'] if 25 <= len(f) <= 130), _a['facts'][0])
+    FACTS.append(dict(t=f"{_a['n']} Facts", e=_a['e'], f=_short, p=_a['path']))
+    if _a['e'] not in {q['e'] for q in QUIZ}:          # skip look-alikes (e.g. red fox vs arctic fox) so the quiz stays fair
+        QUIZ.append(dict(n=_a['n'].lower(), e=_a['e'], f=_short, p=BASE + _a['path']))
+
+
+def animal_links():
+    """Every animal fact page, old and new, for A–Z lists."""
+    old = [(re.sub(r'\s+for Kids.*$', '', U(x['title']['rendered'])).replace('Artic', 'Arctic'), '/' + x['slug'] + '/') for t, x in WP
+           if t == 'pages' and re.sub(r'-facts-for-kids$', '', x['slug']) in ANIMAL_EMOJI]
+    new = [(f"{a['n']} Facts", a['path']) for a in ANIMALS]
+    return sorted(old + new, key=lambda t: t[0].lower())
+
+
+def build_animal_pages():
+    by = {a['s']: a for a in ANIMALS}
+    for a in ANIMALS:
+        n, pl, e = a['n'], a['pl'], a['e']
+        title = f"25 {n} Facts for Kids – Fun & Easy {n} Facts | Plooshi"
+        first = re.split(r'(?<=[.!?])\s', a['intro'])[0]
+        desc = f"25 fun {n.lower()} facts for kids! {first}"
+        for tail in (" Plus quick facts and kids' questions answered.", ' Plus quick facts and FAQs.'):
+            if len(desc + tail) <= 160:
+                desc += tail; break
+        quick = ''.join(f'<div><dt>{esc(k)}</dt><dd>{esc(v)}</dd></div>' for k, v in a['quick'].items())
+        facts = ''.join(f'<li>{esc(f)}</li>' for f in a['facts'])
+        faq = ''.join(f'<details class="qa"><summary>{esc(q)}</summary><p>{esc(ans)}</p></details>' for q, ans in a['faq'])
+        extras = []
+        pr = next((p for p in PRINTS if p['s'] == a['print']), None)
+        if pr: extras.append(f'<a class="btn sun" href="/color/?p={pr["s"]}">🎨 Color a {esc(pr["t"].lower())} online</a>')
+        song = next((sp for sp in SONG_PAGES if a.get('song') and a['song'].lower() in sp['t'].lower()), None)
+        if song: extras.append(f'<a class="btn" href="/song/{song["s"]}/">🎵 Sing {esc(song["t"])}</a>')
+        extras.append(f'<a class="btn blue" href="/play/#quiz">🦁 Play the Animal Quiz</a>')
+        rel = ''.join(f'<a class="btn sm white" href="{by[r]["path"]}">{by[r]["e"]} {esc(by[r]["n"])} facts</a>' for r in a['related'] if r in by)
+        content = f'''<p class="lead-text">{esc(a['intro'])}</p>
+<div class="quick-facts"><h2>{e} {esc(n)} quick facts</h2><dl>{quick}</dl></div>
+<h2>25 {esc(n)} Facts for Kids</h2>
+<ol class="facts">{facts}</ol>
+<h2>Questions kids ask about {esc(pl)}</h2>{faq}
+<p class="song-actions">{''.join(extras)}</p>
+<h2>More animal facts</h2><p class="song-actions">{rel} <a class="btn sm white" href="/animal-facts-for-kids/">🐾 All animals A–Z</a></p>'''
+        after = related_block(f"{n} {pl} {a['print'] or ''}".replace('-coloring-page', ''), f'Color a {n.lower()}! 🖍️' if pr else 'Color it in! 🖍️')
+        path = a['path']
+        thumb_img = DOMAIN + thumb(pr) if pr else UP_ABS + '2024/01/Plooshi-1.jpg'
+        ld = {'@context': 'https://schema.org', '@graph': [ORG,
+              {'@type': 'Article', 'headline': f'25 {n} Facts for Kids', 'description': desc, 'url': DOMAIN + path, 'mainEntityOfPage': DOMAIN + path,
+               'datePublished': '2026-10-28', 'dateModified': TODAY, 'inLanguage': 'en', 'image': thumb_img,
+               'about': {'@type': 'Thing', 'name': n}, 'audience': {'@type': 'PeopleAudience', 'suggestedMinAge': 3, 'suggestedMaxAge': 10},
+               'author': {'@id': DOMAIN + '/#plooshi'}, 'publisher': {'@id': DOMAIN + '/#plooshi'}},
+              {'@type': 'FAQPage', 'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': ans}} for q, ans in a['faq']]},
+              crumbs(('Home', '/'), ('Learn', '/learn/'), ('Animal Facts', '/animal-facts-for-kids/'), (f'{n} Facts', path))]}
+        page(path, title, desc,
+             article_shell(f'<a href="/learn/">Learn</a> › <a href="/animal-facts-for-kids/">Animal Facts</a> › {esc(n)}', f'{esc(n)} Facts for Kids {e}', content, after, read=True),
+             '/learn/', ld, og_img=thumb_img, og_type='article')
+        ARTICLES.append(dict(p=path, t=f'{n} Facts for Kids', img=None, c='Animal Facts', d=desc, e=e, print=a['print']))
+
+
+def animal_index():
+    """Add an A–Z list of every animal page to the old WordPress 'Animal Facts for Kids' hub."""
+    f = os.path.join(SITE, 'animal-facts-for-kids', 'index.html')
+    if not os.path.exists(f): return
+    items = ''.join(f'<li><a href="{p}">{esc(t)}</a></li>' for t, p in animal_links())
+    block = (f'<section id="all-animals"><div class="wrap"><div class="sec-head"><span class="tag">A to Z</span><h2>Every animal on Plooshi 🐾</h2>'
+             f'<p>Tap an animal to learn fun facts about it.</p></div><ul class="lyric-list">{items}</ul></div></section>')
+    h = open(f, encoding='utf8').read().replace('</main>', block + '\n</main>', 1)
+    open(f, 'w', encoding='utf8').write(h)
 
 
 def big_img(p):
@@ -1115,6 +1193,10 @@ Plooshi is based in Austin, Texas (founded 2023). Contact: info@plooshi.com. Lin
     for t, x in WP:
         if t == 'pages' and x.get('parent') != PRINT_PARENT and x['slug'] not in SKIP and x['slug'] not in LEGAL:
             full.append(f'\n---\n\n# {U(x["title"]["rendered"])}\nURL: {DOMAIN}/{x["slug"]}/\n\n{text_of(clean(x["content"]["rendered"]))}')
+    for a in ANIMALS:
+        full.append(f"\n---\n\n# {a['n']} Facts for Kids\nURL: {DOMAIN}{a['path']}\n\n{a['intro']}\n\n"
+                    + '\n'.join(f'- {k}: {v}' for k, v in a['quick'].items()) + '\n\n## Facts\n' + '\n'.join(f'- {f}' for f in a['facts'])
+                    + '\n\n## Questions\n' + '\n'.join(f'Q: {q}\nA: {ans}' for q, ans in a['faq']))
     W('llms-full.txt', '\n'.join(full) + '\n')
 
     W('humans.txt', f'''/* TEAM */
@@ -1170,7 +1252,7 @@ if __name__ == '__main__':
     make_thumbs()
     build_home(); build_songs(); build_printables(); build_play()
     build_printable_pages(); build_song_pages(); songs_lyrics_index()
-    build_articles(); build_learn(); build_info_pages(); build_404()
+    build_articles(); build_animal_pages(); animal_index(); build_learn(); build_info_pages(); build_404()
     build_color(); build_stickers(); build_bedtime()
     build_hosting(); build_site_files()
     apply_base()
