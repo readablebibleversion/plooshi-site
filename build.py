@@ -743,6 +743,9 @@ def build_hosting():
 def apply_base():
     """When serving from a sub-folder, prefix every root link with BASE and keep the test copy out of search results."""
     if not BASE: return
+    # Git Bash on Windows can silently turn "/plooshi-site" into "C:/Program Files/Git/plooshi-site"
+    if not re.fullmatch(r'(/[A-Za-z0-9._-]+)+', BASE):
+        raise SystemExit(f'BASE_PATH must look like /plooshi-site, got {BASE!r}')
     import glob
     for f in glob.glob(os.path.join(SITE, '**', '*.html'), recursive=True):
         h = open(f, encoding='utf8').read()
