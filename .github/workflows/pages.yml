@@ -1,9 +1,12 @@
-# Publishes ./site to GitHub Pages on every push to main.
-# One-time setup: repo Settings → Pages → Source: "GitHub Actions".
+# Publishes ./site to GitHub Pages. Runs only when started by hand:
+# repo Actions tab → "Deploy to GitHub Pages" → Run workflow.
+# One-time setup: repo Settings → Pages → Source: "GitHub Actions"
+# (private repos need GitHub Pro/Team for Pages).
+# To deploy on every push instead, add under `on:`
+#   push:
+#     branches: [main]
 name: Deploy to GitHub Pages
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
