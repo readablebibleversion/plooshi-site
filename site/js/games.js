@@ -1,6 +1,6 @@
 /* Plooshi Play games: Color Plooshi, Memory Match, Bubble Pop Counting */
 (function () {
-  const { tone, NOTES, sfx, store, confetti, say, earn } = window.Plooshi;
+  const { ac: audio, tone, NOTES, sfx, store, confetti, say, earn } = window.Plooshi;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
@@ -106,7 +106,7 @@
     const bass = ['C3', 'C3', 'G3', 'A3', 'F3', 'F3', 'G3', 'G3'], hz = { C3: 130.81, G3: 196, A3: 220, F3: 174.61 };
     const melody = ['E5', 'G4', 'C5', 'G4', 'D5', 'G4', 'C5', 'E5'];
     let playing = false, frozen = false, nextT = 0, step = 0, sched, freezeT, freezes = 0;
-    const A = () => { const c = window.AudioContext || window.webkitAudioContext; return (A.c = A.c || (c && new c())); };
+    const A = audio; // shared context, unlocked on the first tap
     function drum(ac, t, kind) {
       if (kind === 'kick') {
         const o = ac.createOscillator(), g = ac.createGain(); o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(40, t + .15);
@@ -148,7 +148,7 @@
       }, 2200 + Math.random() * 1800);
     }
     function start() {
-      const ac = A(); if (!ac) return; ac.resume();
+      const ac = A(); if (!ac) return;
       playing = true; frozen = false; nextT = ac.currentTime + .05; step = 0;
       sched = setInterval(schedule, 40); m.classList.add('dance'); floor.classList.add('on');
       btn.textContent = '⏹ Stop'; planFreeze();

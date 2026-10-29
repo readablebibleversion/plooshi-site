@@ -7,7 +7,7 @@ Spotify: https://open.spotify.com/artist/7im2jVMioz2l4PWG37YbFV
 Instagram: https://www.instagram.com/plooshimusic/
 
 /* SITE */
-Last update: 2026-10-28
+Last update: 2026-10-29
 Language: English
 Standards: HTML5, CSS3, schema.org
 Made with: Python, plain JavaScript and lots of crayons 🖍️

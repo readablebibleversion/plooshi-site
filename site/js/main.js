@@ -12,9 +12,29 @@
   let soundOn = store.get('sound', true);
   function ac() {
     if (!ctx) { const A = window.AudioContext || window.webkitAudioContext; if (A) ctx = new A(); }
-    if (ctx && ctx.state === 'suspended') ctx.resume();
+    if (ctx && ctx.state !== 'running' && ctx.state !== 'closed') ctx.resume().catch(() => {});
     return ctx;
   }
+  // Phones only let sound start from a finished tap (iOS ignores pointerdown/touchstart),
+  // and iPhones mute web audio with the ring/silent switch unless the page plays as media.
+  let unlocked = false;
+  function unlock() {
+    const c = ac(); if (!c) return;
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+    if (!unlocked) {
+      unlocked = true;
+      const s = c.createBufferSource(); s.buffer = c.createBuffer(1, 1, 22050); s.connect(c.destination); s.start(0);
+      // a moment of silent <audio> moves older iPhones onto the media channel (ignores the silent switch)
+      const n = 2205, b = new ArrayBuffer(44 + n * 2), v = new DataView(b), w = (o, t) => [...t].forEach((ch, i) => v.setUint8(o + i, ch.charCodeAt(0)));
+      w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+      v.setUint32(24, 22050, true); v.setUint32(28, 44100, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+      const el = new Audio(URL.createObjectURL(new Blob([b], { type: 'audio/wav' }))); el.setAttribute('playsinline', ''); el.play().catch(() => {});
+    }
+    if (c.state === 'running') ['touchend', 'pointerup', 'click', 'keydown'].forEach(t => document.removeEventListener(t, unlock, true));
+  }
+  ['touchend', 'pointerup', 'click', 'keydown'].forEach(t => document.addEventListener(t, unlock, { capture: true, passive: true }));
+  // iOS suspends ("interrupts") audio when the app is backgrounded or a call comes in
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && ctx && ctx.state !== 'running') ctx.resume().catch(() => {}); });
   function tone(freq, dur = 0.5, type = 'sine', vol = 0.25, when = 0) {
     if (!soundOn) return;
     const c = ac(); if (!c) return;
@@ -121,7 +141,7 @@
   }
   syncStickerBtn();
 
-  window.Plooshi = { tone, NOTES, sfx, store, confetti, say, earn, STICKERS, season };
+  window.Plooshi = { ac, tone, NOTES, sfx, store, confetti, say, earn, STICKERS, season };
 
   function syncSoundBtn() {
     $$('.sound-btn').forEach(b => { b.setAttribute('aria-pressed', soundOn); b.textContent = soundOn ? '🔊' : '🔇'; b.setAttribute('aria-label', soundOn ? 'Turn sounds off' : 'Turn sounds on'); });
@@ -278,7 +298,11 @@
     const bars = $$('.bar', x);
     const keys = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k'];
     function hit(b) { tone(NOTES[b.dataset.note], 0.9, 'sine', 0.28); b.classList.add('hit'); setTimeout(() => b.classList.remove('hit'), 140); x.dispatchEvent(new CustomEvent('note', { detail: b.dataset.note })); }
-    bars.forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); hit(b); }));
+    // listen on the whole xylophone so a tap in the gap between bars plays the nearest one
+    x.addEventListener('pointerdown', e => {
+      const near = bars.reduce((best, b) => { const r = b.getBoundingClientRect(), d = Math.max(r.left - e.clientX, 0, e.clientX - r.right); return d < best.d ? { b, d } : best; }, { b: null, d: Infinity });
+      if (near.b) { e.preventDefault(); hit(near.b); }
+    });
     window.addEventListener('keydown', e => { const k = keys.indexOf(e.key.toLowerCase()); if (k > -1 && bars[k] && !e.target.closest('input')) hit(bars[k]); });
     // play-along: highlight the next bar to tap
     const songs = {
